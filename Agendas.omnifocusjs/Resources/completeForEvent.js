@@ -6,12 +6,18 @@
       selection = document.windows[0].selection
     }
 
-    // mark tasks as complete
-    selection.tasks.forEach(task => task.markComplete())
-    selection.projects.forEach(project => project.markComplete())
-
-    // check dependents
+    // check links
     await this.agendasLibrary.updateAgendas()
+
+    // mark tasks as complete
+    selection.tasks.forEach(task => {
+      task.markComplete()
+      this.agendasLibrary.checkEvent(task)
+    })
+    selection.projects.forEach(project => {
+      project.markComplete()
+      this.agendasLibrary.checkEvent(project.task)
+    })
   })
 
   action.validate = function (selection, sender) {

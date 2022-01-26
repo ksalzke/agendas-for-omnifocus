@@ -196,5 +196,15 @@
     })
   }
 
+  agendasLibrary.checkEvent = async (event) => {
+    const items = agendasLibrary.getItems(event)
+    const form = new Form()
+    items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
+    await form.show(`${event.name}: Select Completed Tasks`, 'Mark Complete')
+    items.forEach(item => {
+      if (form.values[item.id.primaryKey]) item.markComplete()
+    })
+  }
+
   return agendasLibrary
 })()
