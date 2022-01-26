@@ -6,10 +6,6 @@
   "version": "1.0.0",
   "actions": [
     {
-      "identifier": "addEventMarker",
-      "image": "calendar.badge.plus"
-    },
-    {
       "identifier": "addAgendaItem",
       "image": "calendar"
     },
