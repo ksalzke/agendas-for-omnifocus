@@ -1,0 +1,46 @@
+{
+  "defaultLocale": "en",
+  "identifier": "com.KaitlinSalzke.Agendas",
+  "author": "Kaitlin Salzke",
+  "description": "An OmniFocus plugin that for the management of 'event' and 'agenda' tasks.",
+  "version": "1.0.0",
+  "actions": [
+    {
+      "identifier": "addEventMarker",
+      "image": "calendar.badge.plus"
+    },
+    {
+      "identifier": "addAgendaItem",
+      "image": "calendar"
+    },
+    {
+      "identifier": "removeEvents",
+      "image": "delete.left.fill"
+    },
+    {
+      "identifier": "removeAgendaItems",
+      "image": "delete.right.fill"
+    },
+    {
+      "identifier": "showEvents",
+      "image": "chevron.left.square.fill"
+    },
+    {
+      "identifier": "showAgendaItems",
+      "image": "chevron.right.square.fill"
+    },
+    {
+      "identifier": "completeForEvent",
+      "image": "checkmark.square.fill"
+    },
+    {
+      "identifier": "preferences",
+      "image": "gearshape.2"
+    }
+  ],
+  "libraries": [
+    {
+      "identifier": "agendasLibrary"
+    }
+  ]
+}
