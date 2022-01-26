@@ -1,4 +1,4 @@
-/* global PlugIn Version Project Alert Tag Task */
+/* global PlugIn Version Alert Tag Task Form */
 (() => {
   const agendasLibrary = new PlugIn.Library(new Version('1.0'))
 
@@ -143,15 +143,8 @@
 
     // get links where one or both of the values has been completed, dropped, or no longer exists
     const linksToRemove = links.filter(link => {
-      const [eventID, itemID, dateString=''] = link
+      const [eventID, itemID, dateString = ''] = link
       const [event, item, date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
-
-      const lastInstance = (task) => {
-          // returns latest instance of a repeating task, or current instance if no previous instances
-          const instances = flattenedTasks.filter(t => t.id.primaryKey.includes(task.id.primaryKey))
-          const last = instances.sort((a, b) => b.id.primaryKey.split('.')[1] - a.id.primaryKey.split('.')[1])[0]
-          return last
-      }
 
       return event === null || item === null || event.taskStatus === Task.Status.Dropped || item.taskStatus === Task.Status.Completed || item.taskStatus === Task.Status.Dropped
     })
