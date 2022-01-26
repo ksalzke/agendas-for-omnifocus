@@ -134,30 +134,6 @@
     return links.filter(link => link[1] === task.id.primaryKey).map(link => Task.byIdentifier(link[0]))
   }
 
-  agendasLibrary.getAllEvents = (task) => {
-    const getAllEvents = (tasks) => {
-      const events = tasks.flatMap(task => agendasLibrary.getEvents(task))
-      if (events.length === 0) return tasks
-      return getAllEvents(events).concat(tasks)
-    }
-
-    const firstEvents = agendasLibrary.getEvents(task)
-
-    return getAllEvents(firstEvents)
-  }
-
-  agendasLibrary.getAllItems = (task) => {
-    const getAllItems = (tasks) => {
-      const items = tasks.flatMap(task => agendasLibrary.getItems(task))
-      if (items.length === 0) return tasks
-      return getAllItems(items).concat(tasks)
-    }
-
-    const firstItems = agendasLibrary.getItems(task)
-
-    return getAllItems(firstItems)
-  }
-
   agendasLibrary.updateAgendas = async () => {
     // remove duplicates
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
