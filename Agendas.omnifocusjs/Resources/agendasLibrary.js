@@ -61,9 +61,13 @@
   agendasLibrary.selectAndAddToAgenda = async (items) => {
     const eventTags = await agendasLibrary.getEventTags()
     const chooseEvent = async () => {
+      const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+      const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
+      const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
+
       const events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
       const form = new Form()
-      form.addField(new Form.Field.Option('event', 'Choose Event', events, events.map(e => e.name)))
+      form.addField(new Form.Field.Option('event', 'Choose Event', events, events.map(e => e.name), lastUpdated))
       await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
       return form.values.event
     }
@@ -89,6 +93,9 @@
     // save link in synced prefs
     links.push([event.id.primaryKey, item.id.primaryKey, new Date()])
     syncedPrefs.write('links', links)
+
+    // note last updated event in prefs
+    syncedPrefs.write('lastUpdatedID', event.id.primaryKey)
   }
 
   agendasLibrary.removeFromAgenda = async (eventID, itemID) => {
