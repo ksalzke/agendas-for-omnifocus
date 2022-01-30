@@ -42,7 +42,7 @@
 
     if (event !== null) {
       // remove item from event note note
-      const regexString = `[ ?Go to item task): omnifocus:///task/${item.id.primaryKey} ?].+`
+      const regexString = `[ ?Go to item task: omnifocus:///task/${item.id.primaryKey} ?].+`
       const regexForNoteSearch = new RegExp(RegExp.quote(regexString), 'g')
       event.note = event.note.replace(regexForNoteSearch, '')
     }
