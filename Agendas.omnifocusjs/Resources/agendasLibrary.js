@@ -183,24 +183,28 @@
     form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
     await form.show(`${event.name}: Process Tasks`, 'Process Tasks')
     const selected = items.filter(item => form.values[item.id.primaryKey])
-    selected.forEach(item => {
-      switch(form.values.action) {
-        case 'complete':
-          item.markComplete()
-          break
-        case 'unlink':
-          agendasLibrary.removeFromAgenda(event.id.primaryKey, item.id.primaryKey)
-          break
-        case 're-link':
-          // !TODO: implement re-link
-          break
-        case 'drop':
-          item.drop(false)
-          break
-        case 'defer':
-          // !TODO: implement 'defer'
-      }
-    })
+
+    switch(form.values.action) {
+      case 'complete':
+        selected.forEach(item => item.markComplete())
+        break
+      case 'unlink':
+        break
+      case 're-link':
+        agendasLibrary.selectAndAddToAgenda(selected)
+        break
+      case 'drop':
+        selected.forEach(item => item.drop(false))
+        break
+      case 'defer':
+        // !TODO: implement 'defer' 
+    }
+
+    // remove existing links
+    selected.forEach(item => agendasLibrary.removeFromAgenda(event.id.primaryKey, item.id.primaryKey))
+
+    // run until there are remaining items
+    if (selected.length !== items.length) await agendasLibrary.processEvent(event)
   }
 
   return agendasLibrary
