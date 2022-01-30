@@ -58,6 +58,22 @@
     links.forEach(link => agendasLibrary.addNotes(Task.byIdentifier(link[0]), Task.byIdentifier(link[1])))
   }
 
+  agendasLibrary.selectAndAddToAgenda = async (items) => {
+    const eventTags = await agendasLibrary.getEventTags()
+    const chooseEvent = async () => {
+      const events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
+      const form = new Form()
+      form.addField(new Form.Field.Option('event', 'Choose Event', events, events.map(e => e.name)))
+      await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
+      return form.values.event
+    }
+
+    const event = await chooseEvent()
+
+    // add all selected tasks as agenda items
+    items.forEach(async (item) => await agendasLibrary.addToAgenda(event, item))
+  }
+
   agendasLibrary.addToAgenda = async (event, item) => {
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     const links = agendasLibrary.getLinks()
