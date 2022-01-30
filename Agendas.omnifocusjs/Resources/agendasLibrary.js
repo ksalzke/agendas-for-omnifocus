@@ -81,18 +81,31 @@
 
     const searchForm = async () => {
       const events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
+
+      const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+      const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
+      const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
+
+      console.log(events)
       const form = new Form()
 
       // search box
       form.addField(new Form.Field.String('textInput', 'Search', null))
 
       // result box
-      const searchResults = []
-      const searchResultIndexes = []
-      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults, null)
+      const searchResults = events
+      const searchResultIndexes = events.map((e, i) => i)
+      console.log(searchResults)
+      console.log(searchResultIndexes)
+      console.log('trynig to create popup menu')
+      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), null)
+      console.log(popupMenu)
       popupMenu.allowsNull = true
+      console.log('popupMenu.allowsNull set')
       popupMenu.nullOptionTitle = 'No Results'
+      console.log('popupMenu.nullOptionTitle set')
       form.addField(popupMenu)
+      console.log('popupMenu added')
 
       // validation
       form.validate = function (formObject) {
