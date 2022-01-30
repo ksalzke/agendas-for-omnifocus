@@ -86,7 +86,6 @@
       const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
       const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
 
-      console.log(events)
       const form = new Form()
 
       // search box
@@ -98,7 +97,7 @@
       console.log(searchResults)
       console.log(searchResultIndexes)
       console.log('trynig to create popup menu')
-      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), null)
+      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), searchResults.indexOf(lastUpdated))
       console.log(popupMenu)
       popupMenu.allowsNull = true
       console.log('popupMenu.allowsNull set')
