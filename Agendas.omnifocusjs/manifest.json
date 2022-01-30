@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "actions": [
     {
-      "identifier": "addAgendaItem",
+      "identifier": "addToAgenda",
       "image": "calendar"
     },
     {
