@@ -61,13 +61,10 @@
   agendasLibrary.addToAgenda = async (event, item) => {
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     const links = agendasLibrary.getLinks()
-    const eventTag = await agendasLibrary.getPrefTag('eventTag')
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
-    const markerTag = await agendasLibrary.getPrefTag('markerTag')
 
     // add tags
     item.addTag(itemTag)
-    event.addTag(eventTag)
 
     // prepend item details to notes if that setting is selected
     const addToNote = (syncedPrefs.read('addToNote') !== null) ? syncedPrefs.readBoolean('addToNote') : true
@@ -76,14 +73,10 @@
     // save link in synced prefs
     links.push([event.id.primaryKey, item.id.primaryKey, new Date()])
     syncedPrefs.write('links', links)
-
-    // remove marker tag used for processing
-    event.removeTag(markerTag)
   }
 
   agendasLibrary.removeFromAgenda = async (eventID, itemID) => {
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
-    const eventTag = await agendasLibrary.getPrefTag('eventTag')
     const event = Task.byIdentifier(eventID)
     const item = Task.byIdentifier(itemID)
 
@@ -95,15 +88,6 @@
 
     // remove notes
     agendasLibrary.removeNotes(event, item)
-
-    // update event task if it still exists
-    if (event !== null) {
-      // if no remaining items, remove tag from event task
-      const items = await agendasLibrary.getItems(event)
-      if (items.length === 0) {
-        event.removeTag(eventTag)
-      }
-    }
 
     // update item task if it still exists
     if (item !== null) {
@@ -122,6 +106,21 @@
     // if not set, show preferences pane and then try again
     await this.action('preferences').perform()
     return agendasLibrary.getPrefTag(prefTag)
+  }
+
+  agendasLibrary.getEventTags = async () => {
+    const preferences = agendasLibrary.loadSyncedPrefs()
+    const eventTagIDs = preferences.read('eventTagIDs') || []
+
+    const eventTags = eventTagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
+
+    if (eventTags.length === 0) {
+      // if not set, show preferences pane and then try again
+      await this.action('preferences').perform()
+      return agendasLibrary.getEventTags()
+    }
+
+    return eventTags
   }
 
   agendasLibrary.getItems = (task) => {
@@ -151,13 +150,7 @@
 
     linksToRemove.forEach(link => agendasLibrary.removeFromAgenda(link[0], link[1]))
 
-    // check tasks tagged with 'item' or 'event' and if they are not included in links, remove tag
-    const eventTag = await agendasLibrary.getPrefTag('eventTag')
-    eventTag.tasks.forEach(async task => {
-      const items = await agendasLibrary.getItems(task)
-      if (items.length === 0) task.removeTag(eventTag)
-    })
-
+    // check tasks tagged with 'item' and if they are not included in links, remove tag
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
     itemTag.tasks.forEach(async task => {
       const events = await agendasLibrary.getEvents(task)
