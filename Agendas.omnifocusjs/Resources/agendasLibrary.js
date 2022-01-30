@@ -158,13 +158,32 @@
     })
   }
 
-  agendasLibrary.checkEvent = async (event) => {
+  agendasLibrary.processEvent = async (event) => {
     const items = agendasLibrary.getItems(event)
     const form = new Form()
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
-    await form.show(`${event.name}: Select Completed Tasks`, 'Mark Complete')
-    items.forEach(item => {
-      if (form.values[item.id.primaryKey]) item.markComplete()
+    const actions = ['complete', 'unlink', 're-link', 'drop']
+    if (event.repetitionRule !== null) actions.push('defer')
+    form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
+    await form.show(`${event.name}: Process Tasks`, 'Process Tasks')
+    const selected = items.filter(item => form.values[item.id.primaryKey])
+    selected.forEach(item => {
+      switch(form.values.action) {
+        case 'complete':
+          item.markComplete()
+          break
+        case 'unlink':
+          agendasLibrary.removeFromAgenda(event.id.primaryKey, item.id.primaryKey)
+          break
+        case 're-link':
+          // !TODO: implement re-link
+          break
+        case 'drop':
+          item.drop(false)
+          break
+        case 'defer':
+          // !TODO: implement 'defer'
+      }
     })
   }
 

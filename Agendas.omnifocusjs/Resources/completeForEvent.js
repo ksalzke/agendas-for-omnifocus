@@ -12,11 +12,11 @@
     // mark tasks as complete
     selection.tasks.forEach(task => {
       task.markComplete()
-      this.agendasLibrary.checkEvent(task)
+      this.agendasLibrary.processEvent(task)
     })
     selection.projects.forEach(project => {
       project.markComplete()
-      this.agendasLibrary.checkEvent(project.task)
+      this.agendasLibrary.processEvent(project.task)
     })
   })
 
