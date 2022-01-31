@@ -10,7 +10,7 @@
       "image": "calendar"
     },
     {
-      "identifier": "removeEvents",
+      "identifier": "removeFromAgenda",
       "image": "delete.left.fill"
     },
     {

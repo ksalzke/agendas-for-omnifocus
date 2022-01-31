@@ -64,7 +64,7 @@
   agendasLibrary.selectAndAddToAgenda = async (items) => {
 
     const searchForm = async () => {
-      const events = await agendasLibrary.getEvents()
+      const events = await agendasLibrary.getAllEvents()
 
       const syncedPrefs = agendasLibrary.loadSyncedPrefs()
       const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
@@ -211,9 +211,14 @@
     return links.filter(link => link[0] === taskID).map(link => link[1])
   }
 
-  agendasLibrary.getEvents = async (task) => {
+  agendasLibrary.getAllEvents = async () => {
     const eventTags = await agendasLibrary.getEventTags()
     return events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
+  }
+
+  agendasLibrary.getEvents = (task) => {
+    const links = agendasLibrary.getLinks()
+    return links.filter(link => link[1] === task.id.primaryKey).map(link => Task.byIdentifier(link[0]))
   }
 
   agendasLibrary.updateAgendas = async () => {
