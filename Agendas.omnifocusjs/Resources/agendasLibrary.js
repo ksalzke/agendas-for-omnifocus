@@ -220,7 +220,7 @@
   agendasLibrary.updateAgendas = async () => {
     // remove duplicates
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
-    const linksWithDuplicates = agendasLibrary.getLinks().map(link => [link[0], link[1]])
+    const linksWithDuplicates = agendasLibrary.getLinks().map(link => [link[0], link[1], link[2]])
     const links = Array.from(new Set(linksWithDuplicates.map(JSON.stringify)), JSON.parse)
     syncedPrefs.write('links', links)
 
@@ -240,11 +240,11 @@
     })
     linksToRemove.forEach(link => agendasLibrary.removeFromAgenda(link[0], link[1]))
 
-    // process events that have been completed, dropped, or no longer exists
+    /* // process events that have been completed, dropped, or no longer exists
     const allEvents = agendasLibrary.getEvents()
     allEvents.forEach(event => {
       if (event === null || event.taskStatus === Task.Status.Completed || event.taskStatus === Task.Status.Dropped || (event.repetitionRule !== null && lastInstance(event).completionDate > date)) agendasLibrary.processEvent(event)
-    })
+    }) */
 
     // check tasks tagged with 'item' and if they are not included in links, remove tag
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
