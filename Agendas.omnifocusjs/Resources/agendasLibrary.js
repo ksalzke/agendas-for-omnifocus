@@ -27,7 +27,7 @@
     agendasLibrary.removeNotes(event, item)
 
     item.note = `[ Go to event task: omnifocus:///task/${event.id.primaryKey} ] ${event.name}\n\n${item.note}`
-    event.note = `[ Go to item task: omnifocus:///task/${item.id.primaryKey} ] ${item.name}\n\n${event.note}`
+    event.note = `[ Go to agenda item: omnifocus:///task/${item.id.primaryKey} ] ${item.name}\n\n${event.note}`
   }
 
   agendasLibrary.removeNotes = (event, item) => {
@@ -42,7 +42,7 @@
 
     if (event !== null) {
       // remove item from event note note
-      const regexString = `[ ?Go to item task: omnifocus:///task/${item.id.primaryKey} ?].+`
+      const regexString = `[ ?Go to agenda item: omnifocus:///task/${item.id.primaryKey} ?].+`
       const regexForNoteSearch = new RegExp(RegExp.quote(regexString), 'g')
       event.note = event.note.replace(regexForNoteSearch, '')
     }
@@ -60,24 +60,6 @@
 
   agendasLibrary.selectAndAddToAgenda = async (items) => {
     const eventTags = await agendasLibrary.getEventTags()
-
-   
-
-
-    const chooseEvent = async () => {
-      const syncedPrefs = agendasLibrary.loadSyncedPrefs()
-      const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
-      const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
-
-      const events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
-      const form = new Form()
-
-      // search box
-      form.addField(new Form.Field.String('textInput', 'Filter', null))
-      form.addField(new Form.Field.Option('event', 'Event', events, events.map(e => e.name), lastUpdated))
-      await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
-      return form.values.event
-    }
 
     const searchForm = async () => {
       const events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
