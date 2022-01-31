@@ -119,8 +119,8 @@
         }
 
         if (form.fields.length === 1) {
-          // search using provided string
-          const searchResults = events.filter(event => event.name.includes(textValue))
+          // search using provided string)
+          const searchResults = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
           const resultIndexes = []
           const resultTitles = searchResults.map((item, index) => {
             resultIndexes.push(index)
