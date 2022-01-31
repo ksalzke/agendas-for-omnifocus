@@ -73,7 +73,7 @@
       const form = new Form()
 
       // search box
-      form.addField(new Form.Field.String('textInput', 'Search', null))
+      form.addField(new Form.Field.String('textInput', 'Filter', null))
       form.addField(new Form.Field.Option('event', 'Event', events, events.map(e => e.name), lastUpdated))
       await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
       return form.values.event
@@ -89,7 +89,7 @@
       const form = new Form()
 
       // search box
-      form.addField(new Form.Field.String('textInput', 'Search', null))
+      form.addField(new Form.Field.String('textInput', 'Filter', null))
 
       // result box
       const searchResults = events
@@ -101,8 +101,7 @@
 
       // validation
       form.validate = function (formObject) {
-        const textValue = formObject.values.textInput
-        if (!textValue) { return false }
+        const textValue = formObject.values.textInput || ''
         if (textValue !== currentValue) {
           currentValue = textValue
           // remove popup menu
@@ -142,7 +141,7 @@
       await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
 
       // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
-      const textValue = form.values.textInput
+      const textValue = form.values.textInput || ''
       const menuItemIndex = form.values.menuItem
       const results = events.filter(event => event.name.includes(textValue))
       return results[menuItemIndex]
