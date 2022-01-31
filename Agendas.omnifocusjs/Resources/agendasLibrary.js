@@ -122,7 +122,7 @@
           // add new popup menu
           const popupMenu = new Form.Field.Option(
             'menuItem',
-            'Results',
+            'Event',
             resultIndexes,
             resultTitles,
             resultIndexes[0]
@@ -139,7 +139,7 @@
 
       // show form
       let currentValue = ''
-      await form.show('Select', 'Continue')
+      await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
 
       // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
       const textValue = form.values.textInput
