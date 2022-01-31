@@ -94,17 +94,10 @@
       // result box
       const searchResults = events
       const searchResultIndexes = events.map((e, i) => i)
-      console.log(searchResults)
-      console.log(searchResultIndexes)
-      console.log('trynig to create popup menu')
       const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), searchResults.indexOf(lastUpdated))
-      console.log(popupMenu)
       popupMenu.allowsNull = true
-      console.log('popupMenu.allowsNull set')
       popupMenu.nullOptionTitle = 'No Results'
-      console.log('popupMenu.nullOptionTitle set')
       form.addField(popupMenu)
-      console.log('popupMenu added')
 
       // validation
       form.validate = function (formObject) {
