@@ -6,7 +6,6 @@
     // get current preferences or set defaults if they don't yet exist
     const itemTag = (syncedPrefs.readString('itemTagID') !== null) ? await this.agendasLibrary.getPrefTag('itemTag') : null
     const addToNote = (syncedPrefs.read('addToNote') !== null) ? syncedPrefs.readBoolean('addToNote') : true
-    const promptForAdditional = (syncedPrefs.read('promptForAdditional') !== null) ? syncedPrefs.read('promptForAdditional') : false
     const eventTags = (syncedPrefs.read('eventTagIDs') !== null) ? await this.agendasLibrary.getEventTags() : []
 
     // create and show form
@@ -14,14 +13,12 @@
     const tagNames = flattenedTags.map(t => t.name)
     form.addField(new Form.Field.Option('itemTag', 'Agenda Item Tag', flattenedTags, tagNames, itemTag, null))
     form.addField(new Form.Field.Checkbox('addToNote', 'Add link to related tasks to notes', addToNote))
-    form.addField(new Form.Field.Checkbox('promptForAdditional', 'Prompt for additional tasks to be added (leaves marker tag applied)', promptForAdditional))
     form.addField(new Form.Field.MultipleOptions('eventTags', 'Event Tag(s)', flattenedTags, tagNames, eventTags))
     await form.show('Preferences: Agendas', 'OK')
 
     // save preferences
     syncedPrefs.write('itemTagID', form.values.itemTag.id.primaryKey)
     syncedPrefs.write('addToNote', form.values.addToNote)
-    syncedPrefs.write('promptForAdditional', form.values.promptForAdditional)
     syncedPrefs.write('eventTagIDs', form.values.eventTags.map(tag => tag.id.primaryKey))
 
     // update notes if this setting has changed
