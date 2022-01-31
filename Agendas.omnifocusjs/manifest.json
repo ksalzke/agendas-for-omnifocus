@@ -30,6 +30,10 @@
       "image": "checkmark.square.fill"
     },
     {
+      "identifier": "updateAgendas",
+      "image": "arrow.2.circlepath.circle.fill"
+    },
+    {
       "identifier": "preferences",
       "image": "gearshape.2"
     }

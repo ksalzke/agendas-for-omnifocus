@@ -24,25 +24,28 @@
 
   agendasLibrary.addNotes = (event, item) => {
     // remove note before adding - prevents note being added twice
-    agendasLibrary.removeNotes(event, item)
+    agendasLibrary.removeNotes(event.id.primaryKey, item.id.primaryKey)
 
     item.note = `[ Go to event task: omnifocus:///task/${event.id.primaryKey} ] ${event.name}\n\n${item.note}`
     event.note = `[ Go to agenda item: omnifocus:///task/${item.id.primaryKey} ] ${item.name}\n\n${event.note}`
   }
 
-  agendasLibrary.removeNotes = (event, item) => {
+  agendasLibrary.removeNotes = (eventID, itemID) => {
+    const event = Task.byIdentifier(eventID)
+    const item = Task.byIdentifier(itemID)
+
     RegExp.quote = (str) => str.replace(/([*^$[\]\\(){}|-])/g, '\\$1')
 
     if (item !== null) {
       // remove event from item note
-      const regexString = `[ ?Go to event task: omnifocus:///task/${event.id.primaryKey} ?].+`
+      const regexString = `[ ?Go to event task: omnifocus:///task/${eventID} ?].+`
       const regexForNoteSearch = new RegExp(RegExp.quote(regexString), 'g')
       item.note = item.note.replace(regexForNoteSearch, '')
     }
 
     if (event !== null) {
       // remove item from event note note
-      const regexString = `[ ?Go to agenda item: omnifocus:///task/${item.id.primaryKey} ?].+`
+      const regexString = `[ ?Go to agenda item: omnifocus:///task/${itemID} ?].+`
       const regexForNoteSearch = new RegExp(RegExp.quote(regexString), 'g')
       event.note = event.note.replace(regexForNoteSearch, '')
     }
@@ -50,7 +53,7 @@
 
   agendasLibrary.removeAllNotes = () => {
     const links = agendasLibrary.getLinks()
-    links.forEach(link => agendasLibrary.removeNotes(Task.byIdentifier(link[0]), Task.byIdentifier(link[1])))
+    links.forEach(link => agendasLibrary.removeNotes(link[0], link[1]))
   }
 
   agendasLibrary.addAllNotes = () => {
@@ -76,7 +79,8 @@
       // result box
       const searchResults = events
       const searchResultIndexes = events.map((e, i) => i)
-      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), searchResults.indexOf(lastUpdated))
+      const lastUpdatedIndex = (searchResults.indexOf(lastUpdated) === -1) ? null : searchResults.indexOf(lastUpdated)
+      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), lastUpdatedIndex)
       popupMenu.allowsNull = true
       popupMenu.nullOptionTitle = 'No Results'
       form.addField(popupMenu)
@@ -167,7 +171,7 @@
     syncedPrefs.write('links', updated)
 
     // remove notes
-    agendasLibrary.removeNotes(event, item)
+    agendasLibrary.removeNotes(eventID, itemID)
 
     // update item task if it still exists
     if (item !== null) {
@@ -220,15 +224,27 @@
     const links = Array.from(new Set(linksWithDuplicates.map(JSON.stringify)), JSON.parse)
     syncedPrefs.write('links', links)
 
-    // get links where one or both of the values has been completed, dropped, or no longer exists
+    // function to find last instance of a repeating task
+    const lastInstance = (task) => {
+      // returns latest instance of a repeating task, or current instance if no previous instances
+      const instances = flattenedTasks.filter(t => t.id.primaryKey.includes(task.id.primaryKey))
+      const last = instances.sort((a, b) => b.id.primaryKey.split('.')[1] - a.id.primaryKey.split('.')[1])[0]
+      return last
+    }
+
+    // remove links where agenda item has been completed, dropped, or no longer exists
     const linksToRemove = links.filter(link => {
       const [eventID, itemID, dateString = ''] = link
       const [event, item, date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
-
-      return event === null || item === null || event.taskStatus === Task.Status.Dropped || item.taskStatus === Task.Status.Completed || item.taskStatus === Task.Status.Dropped
+      return  item === null || item.taskStatus === Task.Status.Completed || item.taskStatus === Task.Status.Dropped || (item.repetitionRule !== null && lastInstance(item).completionDate > date)
     })
-
     linksToRemove.forEach(link => agendasLibrary.removeFromAgenda(link[0], link[1]))
+
+    // process events that have been completed, dropped, or no longer exists
+    const allEvents = agendasLibrary.getEvents()
+    allEvents.forEach(event => {
+      if (event === null || event.taskStatus === Task.Status.Completed || event.taskStatus === Task.Status.Dropped || (event.repetitionRule !== null && lastInstance(event).completionDate > date)) agendasLibrary.processEvent(event)
+    })
 
     // check tasks tagged with 'item' and if they are not included in links, remove tag
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
