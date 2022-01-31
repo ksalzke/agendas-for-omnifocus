@@ -14,7 +14,7 @@
       "image": "delete.left.fill"
     },
     {
-      "identifier": "removeAgendaItems",
+      "identifier": "manageAgendaItems",
       "image": "delete.right.fill"
     },
     {

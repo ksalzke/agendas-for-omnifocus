@@ -258,14 +258,18 @@
   agendasLibrary.processEvent = async (eventID) => {
     const event = Task.byIdentifier(eventID)
     const items = agendasLibrary.getItems(eventID).map(id => Task.byIdentifier(id))
+    if (items.length === 0) return
     const form = new Form()
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
     const actions = ['complete', 'unlink', 're-link', 'drop']
     if (event !== null && event.repetitionRule !== null) actions.push('defer')
     form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
-    const prompt = (event === null) ? 'Event (name unknown) no longer exists: review linked tasks' : `Event \'${event.name}\' has been ${event.taskStatus}: review linked tasks`
+    const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `\'${event.name}\': review agenda items`
     await form.show(prompt, 'Process Tasks')
     const selected = items.filter(item => form.values[item.id.primaryKey])
+
+    // remove existing links
+    selected.forEach(item => agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey))
 
     switch(form.values.action) {
       case 'complete':
@@ -280,11 +284,9 @@
         selected.forEach(item => item.drop(false))
         break
       case 'defer':
-        // !TODO: implement 'defer' 
+        selected.forEach(item => agendasLibrary.addToAgenda(event, item))
+        break
     }
-
-    // remove existing links
-    selected.forEach(item => agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey))
 
     // run until there are remaining items
     if (selected.length !== items.length) await agendasLibrary.processEvent(eventID)

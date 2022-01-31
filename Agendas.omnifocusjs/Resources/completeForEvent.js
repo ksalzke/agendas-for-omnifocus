@@ -6,22 +6,22 @@
       selection = document.windows[0].selection
     }
 
-    // check links
-    await this.agendasLibrary.updateAgendas()
-
-    // mark tasks as complete
-    selection.tasks.forEach(task => {
+    selection.tasks.forEach(async task => {
       task.markComplete()
-      this.agendasLibrary.processEvent(task.id.primaryKey)
+      const items = this.agendasLibrary.getItems(task.id.primaryKey)
+      if (items.length === 0) {
+        const alert = new Alert('No linked agenda items', `There are no agenda items linked to \'${task.name}\'.`)
+        alert.show()
+      } else {
+        await this.agendasLibrary.updateAgendas()
+      }
     })
-    selection.projects.forEach(project => {
-      project.markComplete()
-      this.agendasLibrary.processEvent(project.task.id.primaryKey)
-    })
+
+    
   })
 
   action.validate = function (selection, sender) {
-    return selection.tasks.length > 0 || selection.projects.length > 0
+    return selection.tasks.length > 0
   }
 
   return action
