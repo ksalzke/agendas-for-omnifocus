@@ -265,6 +265,8 @@
   agendasLibrary.updateAgendas = async () => {
     const links = agendasLibrary.getLinks()
 
+    agendasLibrary.cleanUp()
+
     // process events that have been completed, dropped, or no longer exist
     const eventsToProcess = links.filter(link => {
       const [eventID, itemID, dateString = ''] = link

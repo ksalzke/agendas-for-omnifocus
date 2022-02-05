@@ -2,6 +2,7 @@
 (() => {
   const action = new PlugIn.Action(async function (selection, sender) {
     const task = selection.tasks[0]
+    this.agendasLibrary.cleanUp()
     const items = this.agendasLibrary.getItems(task.id.primaryKey)
     if (items.length === 0) {
       const alert = new Alert('No linked agenda items', `There are no agenda items linked to '${task.name}'.`)
