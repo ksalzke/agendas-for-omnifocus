@@ -1,4 +1,4 @@
-/* global PlugIn */
+/* global PlugIn Alert */
 (() => {
   const action = new PlugIn.Action(async function (selection, sender) {
     // if called externally (from script) generate selection object
@@ -10,14 +10,12 @@
       task.markComplete()
       const items = this.agendasLibrary.getItems(task.id.primaryKey)
       if (items.length === 0) {
-        const alert = new Alert('No linked agenda items', `There are no agenda items linked to \'${task.name}\'.`)
+        const alert = new Alert('No linked agenda items', `There are no agenda items linked to '${task.name}'.`)
         alert.show()
       } else {
         await this.agendasLibrary.updateAgendas()
       }
     })
-
-    
   })
 
   action.validate = function (selection, sender) {

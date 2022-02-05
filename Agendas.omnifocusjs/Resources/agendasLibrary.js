@@ -1,4 +1,4 @@
-/* global PlugIn Version Alert Tag Task Form */
+/* global PlugIn Version Alert Tag Task Form flattenedTasks */
 (() => {
   const agendasLibrary = new PlugIn.Library(new Version('1.0'))
 
@@ -62,7 +62,6 @@
   }
 
   agendasLibrary.selectAndAddToAgenda = async (items) => {
-
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
 
@@ -160,7 +159,6 @@
 
   agendasLibrary.removeFromAgenda = async (eventID, itemID) => {
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
-    const event = Task.byIdentifier(eventID)
     const item = Task.byIdentifier(itemID)
 
     // remove link from prefs
@@ -213,7 +211,7 @@
 
   agendasLibrary.getAllEvents = async () => {
     const eventTags = await agendasLibrary.getEventTags()
-    return events = eventTags.flatMap(tag => Array.from(tag.remainingTasks))
+    return eventTags.flatMap(tag => Array.from(tag.remainingTasks))
   }
 
   agendasLibrary.getEvents = (task) => {
@@ -239,15 +237,15 @@
     // remove links where agenda item has been completed, dropped, or no longer exists
     const linksToRemove = links.filter(link => {
       const [eventID, itemID, dateString = ''] = link
-      const [event, item, date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
-      return  item === null || item.taskStatus === Task.Status.Completed || item.taskStatus === Task.Status.Dropped || (item.repetitionRule !== null && lastInstance(item).completionDate > date)
+      const [, item, date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
+      return item === null || item.taskStatus === Task.Status.Completed || item.taskStatus === Task.Status.Dropped || (item.repetitionRule !== null && lastInstance(item).completionDate > date)
     })
     linksToRemove.forEach(link => agendasLibrary.removeFromAgenda(link[0], link[1]))
 
     // process events that have been completed, dropped, or no longer exist
     const eventsToProcess = links.filter(link => {
       const [eventID, itemID, dateString = ''] = link
-      const [event, item, date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
+      const [event, , date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
       return event === null || event.taskStatus === Task.Status.Completed || event.taskStatus === Task.Status.Dropped || (event.repetitionRule !== null && lastInstance(event).completionDate > date)
     }).map(link => link[0])
     eventsToProcess.forEach(async event => await agendasLibrary.processEvent(event))
@@ -269,14 +267,14 @@
     const actions = ['complete', 'unlink', 're-link', 'drop']
     if (event !== null && event.repetitionRule !== null) actions.push('defer')
     form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
-    const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `\'${event.name}\': review agenda items`
+    const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `'${event.name}': review agenda items`
     await form.show(prompt, 'Process Tasks')
     const selected = items.filter(item => form.values[item.id.primaryKey])
 
     // remove existing links
     selected.forEach(item => agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey))
 
-    switch(form.values.action) {
+    switch (form.values.action) {
       case 'complete':
         selected.forEach(item => item.markComplete())
         break
