@@ -1,25 +1,20 @@
 /* global PlugIn Alert */
 (() => {
   const action = new PlugIn.Action(async function (selection, sender) {
-    // if called externally (from script) generate selection object
-    if (typeof selection === 'undefined') {
-      selection = document.windows[0].selection
+    const task = selection.tasks[0]
+    task.markComplete()
+    const items = this.agendasLibrary.getItems(task.id.primaryKey)
+    if (items.length === 0) {
+      const alert = new Alert('No linked agenda items', `There are no agenda items linked to '${task.name}'.`)
+      alert.show()
+    } else {
+      await this.agendasLibrary.processEvent(task.id.primaryKey)
     }
-
-    selection.tasks.forEach(async task => {
-      task.markComplete()
-      const items = this.agendasLibrary.getItems(task.id.primaryKey)
-      if (items.length === 0) {
-        const alert = new Alert('No linked agenda items', `There are no agenda items linked to '${task.name}'.`)
-        alert.show()
-      } else {
-        await this.agendasLibrary.updateAgendas()
-      }
-    })
   })
 
-  action.validate = function (selection, sender) {
-    return selection.tasks.length > 0
+  action.validate = async function (selection, sender) {
+    const eventTags = await this.agendasLibrary.getEventTags()
+    return (selection.tasks.length === 1 && selection.tasks[0].tags.some(tag => eventTags.includes(tag)))
   }
 
   return action

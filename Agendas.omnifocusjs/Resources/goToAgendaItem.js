@@ -1,14 +1,12 @@
 /* global PlugIn Form */
 (() => {
   const action = new PlugIn.Action(async function (selection, sender) {
-    const selected = Array.from(selection.tasks).concat(Array.from(selection.projects).map(p => p.task))
-
-    const items = selected.flatMap(task => this.agendasLibrary.getItems(task))
-    const uniqueItems = Array.from(new Set(items))
+    const selected = selection.tasks[0]
+    const items = this.agendasLibrary.getItems(selected.id.primaryKey)
 
     const chooseItem = async () => {
       const form = new Form()
-      form.addField(new Form.Field.Option('itemToGoTo', 'Agenda Item To Go To', uniqueItems, uniqueItems.map(i => i.name), uniqueItems[0]))
+      form.addField(new Form.Field.Option('itemToGoTo', 'Agenda Item To Go To', items, items.map(i => i.name), items[0]))
       await form.show('Go To Agenda Item', 'OK')
       return form.values.itemToGoTo
     }
@@ -17,9 +15,9 @@
     URL.fromString('omnifocus:///task/' + item.id.primaryKey).call(() => {})
   })
 
-  action.validate = function (selection, sender) {
-    const selected = Array.from(selection.tasks).concat(Array.from(selection.projects).map(p => p.task))
-    return (selected.length === 1) && (this.agendasLibrary.getItems(selected[0]).length > 0)
+  action.validate = async function (selection, sender) {
+    const eventTags = await this.agendasLibrary.getEventTags()
+    return (selection.tasks.length === 1 && selection.tasks[0].tags.some(tag => eventTags.includes(tag)))
   }
 
   return action
