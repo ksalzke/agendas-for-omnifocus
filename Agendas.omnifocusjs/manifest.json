@@ -18,11 +18,11 @@
       "image": "delete.right.fill"
     },
     {
-      "identifier": "showEvents",
+      "identifier": "goToEvent",
       "image": "chevron.left.square.fill"
     },
     {
-      "identifier": "showAgendaItems",
+      "identifier": "goToAgendaItem",
       "image": "chevron.right.square.fill"
     },
     {
