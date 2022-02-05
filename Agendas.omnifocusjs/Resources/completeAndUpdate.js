@@ -12,9 +12,8 @@
     }
   })
 
-  action.validate = async function (selection, sender) {
-    const eventTags = await this.agendasLibrary.getEventTags()
-    return (selection.tasks.length === 1 && selection.tasks[0].tags.some(tag => eventTags.includes(tag)))
+  action.validate = function (selection, sender) {
+    return (selection.tasks.length === 1 && this.agendasLibrary.isEvent(selection.tasks[0]))
   }
 
   return action

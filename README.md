@@ -23,7 +23,7 @@ This plug-in contains the following actions:
 
 ## Add To Agenda
 
-This action can be run when one or more tasks or projects are selected.
+This action can be run when one or more tasks or projects are selected, and none of these projects are event tasks.
 
 It prompts the user to select an event, and adds the item(s) to that event's agenda.
 

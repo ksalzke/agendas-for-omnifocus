@@ -61,6 +61,20 @@
     links.forEach(link => agendasLibrary.addNotes(Task.byIdentifier(link[0]), Task.byIdentifier(link[1])))
   }
 
+  agendasLibrary.isEvent = (task) => {
+    const preferences = agendasLibrary.loadSyncedPrefs()
+    const eventTagIDs = preferences.read('eventTagIDs') || []
+
+    const eventTags = eventTagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
+    return task.tags.some(tag => eventTags.includes(tag))
+  }
+
+  agendasLibrary.isItem = (task) => {
+    const preferences = agendasLibrary.loadSyncedPrefs()
+    const itemTagID = preferences.readString('itemTagID')
+    return task.tags.includes(Tag.byIdentifier(itemTagID))
+  }
+
   agendasLibrary.selectAndAddToAgenda = async (items) => {
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
@@ -200,7 +214,6 @@
       await this.action('preferences').perform()
       return agendasLibrary.getEventTags()
     }
-
     return eventTags
   }
 

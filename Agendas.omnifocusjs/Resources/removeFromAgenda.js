@@ -12,13 +12,10 @@
     form.values.eventsToRemove.forEach(event => selection.tasks.forEach(async selected => await this.agendasLibrary.removeFromAgenda(event.id.primaryKey, selected.id.primaryKey)))
   })
 
-  action.validate = async function (selection, sender) {
+  action.validate = function (selection, sender) {
     if (selection.tasks.length === 0) return false
 
-    const syncedPrefs = this.agendasLibrary.loadSyncedPrefs()
-    const itemTag = (syncedPrefs.readString('itemTagID') !== null) ? await this.agendasLibrary.getPrefTag('itemTag') : null
-    if (itemTag === null) return false
-    return selection.tasks.some(task => task.tags.includes(itemTag))
+    return selection.tasks.some(this.agendasLibrary.isItem)
   }
 
   return action
