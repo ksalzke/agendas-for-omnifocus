@@ -233,7 +233,7 @@
   }
 
   agendasLibrary.getAllEvents = async () => {
-    const eventTags = agendasLibrary.getEventTags()
+    const eventTags = await agendasLibrary.getEventTags()
     return eventTags.flatMap(tag => Array.from(tag.remainingTasks))
   }
 
