@@ -192,22 +192,32 @@
     }
   }
 
-  agendasLibrary.getPrefTag = async (prefTag) => {
+  agendasLibrary.prefTag = prefTag => {
     const preferences = agendasLibrary.loadSyncedPrefs()
     const tagID = preferences.readString(`${prefTag}ID`)
 
     if (tagID !== null && Tag.byIdentifier(tagID) !== null) return Tag.byIdentifier(tagID)
+    return null
+  }
 
-    // if not set, show preferences pane and then try again
+  agendasLibrary.getPrefTag = async (prefTag) => {
+    const tag = agendasLibrary.prefTag(prefTag)
+
+    if (tag !== null) return tag
+    // if not set, show preferences pane and then try again)
     await this.action('preferences').perform()
     return agendasLibrary.getPrefTag(prefTag)
   }
 
-  agendasLibrary.getEventTags = async () => {
+  agendasLibrary.eventTags = () => {
     const preferences = agendasLibrary.loadSyncedPrefs()
     const eventTagIDs = preferences.read('eventTagIDs') || []
 
-    const eventTags = eventTagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
+    return eventTagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
+  }
+
+  agendasLibrary.getEventTags = async () => {
+    const eventTags = agendasLibrary.eventTags()
 
     if (eventTags.length === 0) {
       // if not set, show preferences pane and then try again
@@ -223,7 +233,7 @@
   }
 
   agendasLibrary.getAllEvents = async () => {
-    const eventTags = await agendasLibrary.getEventTags()
+    const eventTags = agendasLibrary.getEventTags()
     return eventTags.flatMap(tag => Array.from(tag.remainingTasks))
   }
 

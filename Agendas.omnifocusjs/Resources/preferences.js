@@ -4,9 +4,9 @@
     const syncedPrefs = this.agendasLibrary.loadSyncedPrefs()
 
     // get current preferences or set defaults if they don't yet exist
-    const itemTag = (syncedPrefs.readString('itemTagID') !== null) ? await this.agendasLibrary.getPrefTag('itemTag') : null
+    const itemTag = this.agendasLibrary.prefTag('itemTag')
     const addToNote = (syncedPrefs.read('addToNote') !== null) ? syncedPrefs.readBoolean('addToNote') : true
-    const eventTags = (syncedPrefs.read('eventTagIDs') !== null) ? await this.agendasLibrary.getEventTags() : []
+    const eventTags = this.agendasLibrary.eventTags()
 
     // create and show form
     const form = new Form()
