@@ -160,6 +160,9 @@
     const links = agendasLibrary.getLinks()
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
 
+    // check if is already linked to event - if it is, do not proceed
+    if (links.some(link => link[0] === event.id.primaryKey && link[1] === item.id.primaryKey)) return
+
     // add tags
     item.addTag(itemTag)
 
