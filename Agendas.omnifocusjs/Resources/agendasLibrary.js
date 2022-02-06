@@ -75,6 +75,13 @@
   agendasLibrary.selectAndAddToAgenda = async (items) => {
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
+      const filteredEvents = events.filter(event => items.some(item => !agendasLibrary.getEvents(item).includes(event)))
+      
+      if (filteredEvents.length === 0) {
+        const alert = new Alert('No events found', 'There are no relevant events available.')
+        alert.show()
+        return
+      }
 
       const syncedPrefs = agendasLibrary.loadSyncedPrefs()
       const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
@@ -86,8 +93,8 @@
       form.addField(new Form.Field.String('textInput', 'Filter', null))
 
       // result box
-      const searchResults = events
-      const searchResultIndexes = events.map((e, i) => i)
+      const searchResults = filteredEvents
+      const searchResultIndexes = filteredEvents.map((e, i) => i)
       const lastUpdatedIndex = (searchResults.indexOf(lastUpdated) === -1) ? null : searchResults.indexOf(lastUpdated)
       const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), lastUpdatedIndex)
       popupMenu.allowsNull = true
@@ -107,7 +114,7 @@
 
         if (form.fields.length === 1) {
           // search using provided string)
-          const searchResults = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
+          const searchResults = filteredEvents.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
           const resultIndexes = []
           const resultTitles = searchResults.map((item, index) => {
             resultIndexes.push(index)
@@ -138,7 +145,7 @@
       // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
       const textValue = form.values.textInput || ''
       const menuItemIndex = form.values.menuItem
-      const results = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
+      const results = filteredEvents.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
       return results[menuItemIndex]
     }
 
