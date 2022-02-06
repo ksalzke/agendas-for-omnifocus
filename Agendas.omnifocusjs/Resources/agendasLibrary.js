@@ -62,10 +62,7 @@
   }
 
   agendasLibrary.isEvent = (task) => {
-    const preferences = agendasLibrary.loadSyncedPrefs()
-    const eventTagIDs = preferences.read('eventTagIDs') || []
-
-    const eventTags = eventTagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
+    const eventTags = agendasLibrary.eventTags()
     return task.tags.some(tag => eventTags.includes(tag))
   }
 
