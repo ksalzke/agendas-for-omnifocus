@@ -6,8 +6,7 @@
   })
 
   action.validate = function (selection, sender) {
-    if (selection.tasks.length === 0) return false
-    return !(selection.tasks.some(this.agendasLibrary.isEvent))
+    return selection.tasks.length > 0 || selection.projects.length > 0
   }
 
   return action
