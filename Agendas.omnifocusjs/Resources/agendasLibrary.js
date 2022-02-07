@@ -279,6 +279,14 @@
       const events = await agendasLibrary.getEvents(task)
       if (events.length === 0) task.removeTag(itemTag)
     })
+
+    // check tasks tagged with 'linked event' and if they are not included in links, remove tag
+    const linkedEventTag = await agendasLibrary.getPrefTag('linkedEventTag')
+    linkedEventTag.tasks.forEach(async task => {
+      const items = await agendasLibrary.getItems(task.id.primaryKey)
+      if (items.length === 0) task.removeTag(linkedEventTag)
+    })
+
   }
 
   agendasLibrary.updateAgendas = async () => {
