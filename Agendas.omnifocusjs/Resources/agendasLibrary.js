@@ -159,12 +159,14 @@
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     const links = agendasLibrary.getLinks()
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
+    const linkedEventTag = await agendasLibrary.getPrefTag('linkedEventTag')
 
     // check if is already linked to event - if it is, do not proceed
     if (links.some(link => link[0] === event.id.primaryKey && link[1] === item.id.primaryKey)) return
 
     // add tags
     item.addTag(itemTag)
+    event.addTag(linkedEventTag)
 
     // prepend item details to notes if that setting is selected
     const addToNote = (syncedPrefs.read('addToNote') !== null) ? syncedPrefs.readBoolean('addToNote') : true
