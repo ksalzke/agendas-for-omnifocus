@@ -182,7 +182,9 @@
 
   agendasLibrary.removeFromAgenda = async (eventID, itemID) => {
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
+    const linkedEventTag = await agendasLibrary.getPrefTag('linkedEventTag')
     const item = Task.byIdentifier(itemID)
+    const event = Task.byIdentifier(eventID)
 
     // remove link from prefs
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
@@ -193,11 +195,16 @@
     // remove notes
     agendasLibrary.removeNotes(eventID, itemID)
 
-    // update item task if it still exists
     if (item !== null) {
-      // if no remaining events, remove tag from item task (and if project set to active)
+      // if no remaining events, remove tag from item task
       const events = await agendasLibrary.getEvents(item)
       if (events.length === 0) item.removeTag(itemTag)
+    }
+
+    // if no remaining items, remove tag from event task
+    if (event !== null) {
+      const items = await agendasLibrary.getItems(eventID)
+      if (items.length === 0) event.removeTag(linkedEventTag)
     }
   }
 
