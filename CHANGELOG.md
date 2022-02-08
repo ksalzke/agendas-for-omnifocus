@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.2.0...v1.2.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* :bug: remove 'linked event' tag from event task when 'remove from agenda' run (if no agenda items remaining) ([eec21fd](https://github.com/ksalzke/agendas-for-omnifocus/commit/eec21fd9ece7abafd89c2ac7eec8574921b41a5f))
+
+
+
 # [1.2.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.1.0...v1.2.0) (2022-02-07)
 
 
