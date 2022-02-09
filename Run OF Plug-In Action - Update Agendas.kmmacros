@@ -6,11 +6,7 @@
 		<key>Activate</key>
 		<string>Normal</string>
 		<key>CreationDate</key>
-		<real>652265299.01327801</real>
-		<key>DisabledMacs</key>
-		<array>
-			<string>E9577F3B-EE8F-4200-8C54-69105306E3A4</string>
-		</array>
+		<real>653791836.76091897</real>
 		<key>Macros</key>
 		<array>
 			<dict>
@@ -18,33 +14,102 @@
 				<array>
 					<dict>
 						<key>ActionUID</key>
-						<integer>5688</integer>
-						<key>DisplayKind</key>
-						<string>None</string>
-						<key>HonourFailureSettings</key>
-						<true/>
-						<key>IncludeStdErr</key>
-						<false/>
+						<integer>6855</integer>
+						<key>Conditions</key>
+						<dict>
+							<key>ConditionList</key>
+							<array>
+								<dict>
+									<key>Application</key>
+									<dict>
+										<key>BundleIdentifier</key>
+										<string>com.omnigroup.OmniFocus3</string>
+										<key>Name</key>
+										<string>OmniFocus</string>
+										<key>NewFile</key>
+										<string>/Applications/OmniFocus.app</string>
+									</dict>
+									<key>ConditionType</key>
+									<string>FrontWindow</string>
+									<key>FrontWindowConditionType</key>
+									<string>TitleIsNot</string>
+									<key>FrontWindowTitle</key>
+									<string></string>
+									<key>IsFrontApplication</key>
+									<false/>
+								</dict>
+								<dict>
+									<key>Application</key>
+									<dict>
+										<key>BundleIdentifier</key>
+										<string>com.omnigroup.OmniFocus3</string>
+										<key>Name</key>
+										<string>OmniFocus</string>
+										<key>NewFile</key>
+										<string>/Applications/OmniFocus.app</string>
+									</dict>
+									<key>ApplicationConditionType</key>
+									<string>Active</string>
+									<key>ConditionType</key>
+									<string>Application</string>
+								</dict>
+							</array>
+							<key>ConditionListMatch</key>
+							<string>All</string>
+						</dict>
+						<key>ElseActions</key>
+						<array/>
 						<key>MacroActionType</key>
-						<string>ExecuteAppleScript</string>
-						<key>Path</key>
-						<string></string>
-						<key>Text</key>
-						<string>tell application "OmniFocus"	evaluate javascript "PlugIn.find('com.KaitlinSalzke.Agendas').action('updateAgendas').perform()"end tell</string>
+						<string>IfThenElse</string>
+						<key>ThenActions</key>
+						<array>
+							<dict>
+								<key>Action</key>
+								<string>PercentEncodeForURL</string>
+								<key>ActionUID</key>
+								<integer>7606</integer>
+								<key>Destination</key>
+								<string>Variable</string>
+								<key>DestinationVariable</key>
+								<string>Script</string>
+								<key>MacroActionType</key>
+								<string>Filter</string>
+								<key>Source</key>
+								<string>Text</string>
+								<key>Text</key>
+								<string>PlugIn.find('com.KaitlinSalzke.Agendas').action('updateAgendas').perform()</string>
+							</dict>
+							<dict>
+								<key>ActionUID</key>
+								<integer>7614</integer>
+								<key>MacroActionType</key>
+								<string>SetVariableToText</string>
+								<key>Text</key>
+								<string>omnifocus://localhost/omnijs-run?script=%Script%</string>
+								<key>Variable</key>
+								<string>URL</string>
+							</dict>
+							<dict>
+								<key>ActionUID</key>
+								<integer>7611</integer>
+								<key>IsDefaultApplication</key>
+								<true/>
+								<key>MacroActionType</key>
+								<string>OpenURL</string>
+								<key>TimeOutAbortsMacro</key>
+								<true/>
+								<key>URL</key>
+								<string>%URL%</string>
+							</dict>
+						</array>
 						<key>TimeOutAbortsMacro</key>
-						<true/>
-						<key>TrimResults</key>
-						<true/>
-						<key>TrimResultsNew</key>
-						<true/>
-						<key>UseText</key>
 						<true/>
 					</dict>
 				</array>
 				<key>CreationDate</key>
 				<real>665752664.78179896</real>
 				<key>ModificationDate</key>
-				<real>665752685.48284304</real>
+				<real>666058948.027789</real>
 				<key>Name</key>
 				<string>Run OF Plug-In Action: Update Agendas</string>
 				<key>Triggers</key>
@@ -75,11 +140,11 @@
 			</dict>
 		</array>
 		<key>Name</key>
-		<string>Background (OmniFocus)</string>
+		<string>Temp</string>
 		<key>ToggleMacroUID</key>
-		<string>9DAEF588-BAE9-4726-8A83-D2A3241A432A</string>
+		<string>C91D1C44-E5CC-4488-9DEA-30A44E7B99A8</string>
 		<key>UID</key>
-		<string>59CE63A0-8F16-43CE-886E-EB794417D318</string>
+		<string>433D9C71-7DCD-4A50-B5A8-A0A5D680BAE4</string>
 	</dict>
 </array>
 </plist>
