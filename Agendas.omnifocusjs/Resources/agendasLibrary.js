@@ -368,6 +368,12 @@
 
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
     const actions = ['complete', 'unlink', 're-link', 'drop', 'rename']
+    const actionNames = ['Complete agenda item(s)', 'Unlink agenda item(s)', 'Link agenda item(s) to a different event', 'Drop agenda item(s)', 'Rename agenda item (one only)']
+    if (event !== null && event.repetitionRule !== null) {
+      actions.push('defer')
+      actionNames.push('Defer agenda item(s)')
+    }
+    form.addField(new Form.Field.Option('action', 'Action', actions, actionNames, 'complete'))
     const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `'${event.name}': review agenda items`
     try { await form.show(prompt, 'Process Tasks') } catch (error) {
       console.log(error)
