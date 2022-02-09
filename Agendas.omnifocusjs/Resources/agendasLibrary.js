@@ -82,7 +82,7 @@
 
   agendasLibrary.selectAndAddToAgenda = async (items) => {
     const searchForm = async () => {
-      const events = await agendasLibrary.getAllEvents()
+      const events = agendasLibrary.getAllEvents()
       const filteredEvents = events.filter(event => items.some(item => !agendasLibrary.getEvents(item).includes(event)))
 
       if (filteredEvents.length === 0) {
@@ -266,7 +266,7 @@
     return links.filter(link => link[0] === taskID.split('.')[0]).map(link => link[1]).map(id => Task.byIdentifier(id))
   }
 
-  agendasLibrary.getAllEvents = async () => {
+  agendasLibrary.getAllEvents = () => {
     const eventTags = await agendasLibrary.getEventTags()
     return eventTags.flatMap(tag => Array.from(tag.remainingTasks))
   }
