@@ -360,10 +360,20 @@
       return
     }
     const form = new Form()
+    form.validate = (form) => {
+      const selected = items.filter(item => form.values[item.id.primaryKey])
+      if (form.values.action === 'rename') return selected.length === 1
+      else return selected.length > 0
+    }
+
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
-    const actions = ['complete', 'unlink', 're-link', 'drop']
-    if (event !== null && event.repetitionRule !== null) actions.push('defer')
-    form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
+    const actions = ['complete', 'unlink', 're-link', 'drop', 'rename']
+    const actionNames = ['Complete agenda item(s)', 'Unlink agenda item(s)', 'Link agenda item(s) to a different event', 'Drop agenda item(s)', 'Rename agenda item (one only)']
+    if (event !== null && event.repetitionRule !== null) {
+      actions.push('defer')
+      actionNames.push('Defer agenda item(s)')
+    }
+    form.addField(new Form.Field.Option('action', 'Action', actions, actionNames, 'complete'))
     const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `'${event.name}': review agenda items`
     try { await form.show(prompt, 'Process Tasks') } catch (error) {
       console.log(error)
@@ -373,7 +383,14 @@
     const selected = items.filter(item => form.values[item.id.primaryKey])
 
     // remove existing links
-    selected.forEach(item => agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey))
+    if (form.values.action !== 'rename') selected.forEach(item => agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey))
+
+    const rename = async (task) => {
+      const form = new Form()
+      form.addField(new Form.Field.String('name', 'New name', task.name))
+      await form.show('Rename agenda item', 'Rename')
+      task.name = form.values.name
+    }
 
     switch (form.values.action) {
       case 'complete':
@@ -383,6 +400,9 @@
         break
       case 're-link':
         agendasLibrary.selectAndAddToAgenda(selected)
+        break
+      case 'rename':
+        await rename(selected[0])
         break
       case 'drop':
         selected.forEach(item => item.drop(false))
