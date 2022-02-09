@@ -14,30 +14,11 @@
 				<array>
 					<dict>
 						<key>ActionUID</key>
-						<integer>6855</integer>
+						<integer>7989</integer>
 						<key>Conditions</key>
 						<dict>
 							<key>ConditionList</key>
 							<array>
-								<dict>
-									<key>Application</key>
-									<dict>
-										<key>BundleIdentifier</key>
-										<string>com.omnigroup.OmniFocus3</string>
-										<key>Name</key>
-										<string>OmniFocus</string>
-										<key>NewFile</key>
-										<string>/Applications/OmniFocus.app</string>
-									</dict>
-									<key>ConditionType</key>
-									<string>FrontWindow</string>
-									<key>FrontWindowConditionType</key>
-									<string>TitleIsNot</string>
-									<key>FrontWindowTitle</key>
-									<string></string>
-									<key>IsFrontApplication</key>
-									<false/>
-								</dict>
 								<dict>
 									<key>Application</key>
 									<dict>
@@ -67,7 +48,7 @@
 								<key>Action</key>
 								<string>PercentEncodeForURL</string>
 								<key>ActionUID</key>
-								<integer>7606</integer>
+								<integer>7990</integer>
 								<key>Destination</key>
 								<string>Variable</string>
 								<key>DestinationVariable</key>
@@ -81,7 +62,7 @@
 							</dict>
 							<dict>
 								<key>ActionUID</key>
-								<integer>7614</integer>
+								<integer>7991</integer>
 								<key>MacroActionType</key>
 								<string>SetVariableToText</string>
 								<key>Text</key>
@@ -91,7 +72,7 @@
 							</dict>
 							<dict>
 								<key>ActionUID</key>
-								<integer>7611</integer>
+								<integer>7992</integer>
 								<key>IsDefaultApplication</key>
 								<true/>
 								<key>MacroActionType</key>
@@ -107,9 +88,9 @@
 					</dict>
 				</array>
 				<key>CreationDate</key>
-				<real>665752664.78179896</real>
+				<real>666064347.42388201</real>
 				<key>ModificationDate</key>
-				<real>666058948.027789</real>
+				<real>666066057.79690802</real>
 				<key>Name</key>
 				<string>Run OF Plug-In Action: Update Agendas</string>
 				<key>Triggers</key>
@@ -136,7 +117,7 @@
 					</dict>
 				</array>
 				<key>UID</key>
-				<string>56CCE282-DD34-482C-A9C7-4B84EF64A619</string>
+				<string>D8764747-E8BE-46E8-889A-2252DDBF8C59</string>
 			</dict>
 		</array>
 		<key>Name</key>
