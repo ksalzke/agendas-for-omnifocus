@@ -73,9 +73,12 @@
   }
 
   agendasLibrary.selectAndAddToAgenda = async (items) => {
+    console.log('running selectAndAddToAgenda')
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
+      console.log('Events:', events)
       const filteredEvents = events.filter(event => items.some(item => !agendasLibrary.getEvents(item).includes(event)))
+      console.log('Filtered events: ', filteredEvents)
 
       if (filteredEvents.length === 0) {
         const alert = new Alert('No events found', 'There are no relevant events available.')
@@ -156,6 +159,7 @@
   }
 
   agendasLibrary.addToAgenda = async (event, item) => {
+    console.log(`Trying to add ${item.name} (id: ${item.id.primaryKey}) to ${event.name} (id: ${event.id.primaryKey}) agenda`)
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     const links = agendasLibrary.getLinks()
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
@@ -164,6 +168,7 @@
     // check if is already linked to event - if it is, do not proceed
     if (links.some(link => link[0] === event.id.primaryKey && link[1] === item.id.primaryKey)) return
 
+    console.log('Link does not already exist. Proceeding...')
     // add tags
     item.addTag(itemTag)
     event.addTag(linkedEventTag)
@@ -174,6 +179,7 @@
 
     // save link in synced prefs
     links.push([event.id.primaryKey, item.id.primaryKey, new Date()])
+    console.log('List of links is now:', links, '. Saving to preferences.')
     syncedPrefs.write('links', links)
 
     // note last updated event in prefs
@@ -277,15 +283,23 @@
     // remove duplicates
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     const linksWithDuplicates = agendasLibrary.getLinks().map(link => [link[0], link[1], link[2]])
+    console.log('Removing duplicates...')
     const links = Array.from(new Set(linksWithDuplicates.map(JSON.stringify)), JSON.parse)
+    console.log('List of links is now:', links, '. Saving to preferences.')
     syncedPrefs.write('links', links)
 
     // remove links where agenda item has been completed, dropped, or no longer exists
     const linksToRemove = links.filter(link => {
       const [eventID, itemID, dateString = ''] = link
       const [, item, date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
+      console.log('Checking link:', link)
+      console.log('Item null?', item === null)
+      console.log('Item completed?', item.taskStatus === Task.Status.Completed)
+      console.log('Item dropped?', item.taskStatus === Task.Status.Dropped)
+      console.log('Repeating item completed?', (item.repetitionRule !== null && agendasLibrary.lastInstance(item).completionDate > date))
       return item === null || item.taskStatus === Task.Status.Completed || item.taskStatus === Task.Status.Dropped || (item.repetitionRule !== null && agendasLibrary.lastInstance(item).completionDate > date)
     })
+    console.log('List of links to remove is now:', linksToRemove, '. Removing...')
     linksToRemove.forEach(link => agendasLibrary.removeFromAgenda(link[0], link[1]))
 
     // check tasks tagged with 'item' and if they are not included in links, remove tag
@@ -304,9 +318,11 @@
   }
 
   agendasLibrary.updateAgendas = async () => {
+    console.log('Running updateAgendas()')
     const links = agendasLibrary.getLinks()
-
+    console.log('Starting links are ', links)
     agendasLibrary.cleanUp()
+    console.log('Links after cleanup are ', links)
 
     // process events that have been completed, dropped, or no longer exist
 
