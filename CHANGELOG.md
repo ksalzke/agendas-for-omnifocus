@@ -1,3 +1,23 @@
+# [1.3.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.2.1...v1.3.0) (2022-02-09)
+
+
+### Bug Fixes
+
+* :bug: improve handling of repeating events ([508a38c](https://github.com/ksalzke/agendas-for-omnifocus/commit/508a38c0e371d76081784b59790458e6a5d1cf49))
+* :bug: replace Keyboard Maestro macro with functional solution ([e0b7e04](https://github.com/ksalzke/agendas-for-omnifocus/commit/e0b7e0406d3b07bc4c173decbac571e08e8fa97a))
+* :lipstick: only show 'process event' form if one is not already shown ([c61a592](https://github.com/ksalzke/agendas-for-omnifocus/commit/c61a59284e6125a72223c6c78eb491d13ff016c0))
+* :lipstick: only show processing form once if event is linked to multiple agenda items and form is cancelled ([dd0d3c9](https://github.com/ksalzke/agendas-for-omnifocus/commit/dd0d3c94881c53f47a84ea3c37537b6157a5e392))
+
+
+### Features
+
+* :lipstick: show alert for 'go to agenda item' when no agenda items are linked ([97ddcd1](https://github.com/ksalzke/agendas-for-omnifocus/commit/97ddcd1f311298ff10d906b7a5b6b39ec271b816))
+* :lipstick: update 'go to' actions to use project view in new tab ([4513a57](https://github.com/ksalzke/agendas-for-omnifocus/commit/4513a57c9206dbd6f1a88ab28445140b935519e8))
+* :sparkles: add processing option to 'go to' an agenda item in projects ([50cca02](https://github.com/ksalzke/agendas-for-omnifocus/commit/50cca02c3975601e2458a23d7018ad4a99b83e47))
+* ✨ add ability to rename tasks in processing dialogue ([#13](https://github.com/ksalzke/agendas-for-omnifocus/issues/13)) ([ed229e7](https://github.com/ksalzke/agendas-for-omnifocus/commit/ed229e7f56ee9ef0203b4392c1b9472bdb6a8f5f))
+
+
+
 ## [1.2.1](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.2.0...v1.2.1) (2022-02-08)
 
 
