@@ -16,7 +16,7 @@
       alert.show()
     } else {
       const item = await chooseItem()
-      URL.fromString('omnifocus:///task/' + item.id.primaryKey).call(() => {})
+      this.agendasLibrary.goTo(item)
     }
   })
 

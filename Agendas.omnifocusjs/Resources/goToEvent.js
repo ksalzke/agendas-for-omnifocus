@@ -14,7 +14,8 @@
     }
 
     const event = await chooseEvent()
-    URL.fromString('omnifocus:///task/' + event.id.primaryKey).call(() => {})
+
+    this.agendasLibrary.goTo(event)
   })
 
   action.validate = function (selection, sender) {
