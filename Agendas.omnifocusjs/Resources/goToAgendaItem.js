@@ -11,8 +11,13 @@
       return form.values.itemToGoTo
     }
 
-    const item = await chooseItem()
-    URL.fromString('omnifocus:///task/' + item.id.primaryKey).call(() => {})
+    if (items.length === 0) {
+      const alert = new Alert('No linked agenda items', `There are no agenda items linked to '${selected.name}'.`)
+      alert.show()
+    } else {
+      const item = await chooseItem()
+      URL.fromString('omnifocus:///task/' + item.id.primaryKey).call(() => {})
+    } 
   })
 
   action.validate = function (selection, sender) {
