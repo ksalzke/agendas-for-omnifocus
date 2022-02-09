@@ -1,4 +1,4 @@
-/* global PlugIn Version Alert Tag Task Form flattenedTasks */
+/* global PlugIn Version Alert Tag Task Form flattenedTasks Device */
 (() => {
   const agendasLibrary = new PlugIn.Library(new Version('1.0'))
 
@@ -20,6 +20,13 @@
   agendasLibrary.getLinks = () => {
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     return syncedPrefs.read('links') || []
+  }
+
+  agendasLibrary.goTo = async (task) => {
+    // new tab - only Mac supported
+    if (Device.current.mac) await document.newTabOnWindow(document.windows[0])
+    URL.fromString('omnifocus:///task/' + task.containingProject.id.primaryKey).call(() => {})
+    URL.fromString('omnifocus:///task/' + task.id.primaryKey).call(() => {})
   }
 
   agendasLibrary.addNotes = (event, item) => {
