@@ -321,7 +321,9 @@
       return null // no criteria matched, event task still exists
     }).filter(id => id !== null)
 
-    for (const eventID of relevantEventIDs) {
+    const uniqueEventIDs = Array.from(new Set(relevantEventIDs))
+
+    for (const eventID of uniqueEventIDs) {
       await agendasLibrary.processEvent(eventID)
       await agendasLibrary.cleanUp()
     }
