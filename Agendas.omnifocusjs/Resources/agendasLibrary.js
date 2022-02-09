@@ -76,7 +76,7 @@
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
       const filteredEvents = events.filter(event => items.some(item => !agendasLibrary.getEvents(item).includes(event)))
-      
+
       if (filteredEvents.length === 0) {
         const alert = new Alert('No events found', 'There are no relevant events available.')
         alert.show()
@@ -301,7 +301,6 @@
       const items = await agendasLibrary.getItems(task.id.primaryKey)
       if (items.length === 0) task.removeTag(linkedEventTag)
     })
-
   }
 
   agendasLibrary.updateAgendas = async () => {
@@ -318,7 +317,7 @@
       if (event.repetitionRule !== null) {
         const lastInstance = agendasLibrary.lastInstance(event)
         if (lastInstance.completionDate > date) return lastInstance.id.primaryKey
-      } 
+      }
       return null // no criteria matched, event task still exists
     }).filter(id => id !== null)
 
