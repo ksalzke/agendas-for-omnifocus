@@ -181,19 +181,22 @@
   }
 
   agendasLibrary.removeFromAgenda = async (eventID, itemID) => {
+    const currentInstanceEventID = eventID.split('.')[0]
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
     const linkedEventTag = await agendasLibrary.getPrefTag('linkedEventTag')
     const item = Task.byIdentifier(itemID)
     const event = Task.byIdentifier(eventID)
+    const currentInstanceEvent = Task.byIdentifier(currentInstanceEventID)
 
     // remove link from prefs
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
     const links = agendasLibrary.getLinks()
-    const updated = links.filter(link => !(link[0] === eventID && link[1] === itemID))
+    const updated = links.filter(link => !(link[0] === currentInstanceEventID && link[1] === itemID))
     syncedPrefs.write('links', updated)
 
     // remove notes
     agendasLibrary.removeNotes(eventID, itemID)
+    agendasLibrary.removeNotes(currentInstanceEventID, itemID)
 
     if (item !== null) {
       // if no remaining events, remove tag from item task
@@ -203,6 +206,11 @@
 
     // if no remaining items, remove tag from event task
     if (event !== null) {
+      const items = await agendasLibrary.getItems(eventID)
+      if (items.length === 0) event.removeTag(linkedEventTag)
+    }
+
+    if (currentInstanceEvent !== null) {
       const items = await agendasLibrary.getItems(eventID)
       if (items.length === 0) event.removeTag(linkedEventTag)
     }
@@ -245,7 +253,7 @@
 
   agendasLibrary.getItems = (taskID) => {
     const links = agendasLibrary.getLinks()
-    return links.filter(link => link[0] === taskID).map(link => link[1]).map(id => Task.byIdentifier(id))
+    return links.filter(link => link[0] === taskID.split('.')[0]).map(link => link[1]).map(id => Task.byIdentifier(id))
   }
 
   agendasLibrary.getAllEvents = async () => {
@@ -302,13 +310,20 @@
     agendasLibrary.cleanUp()
 
     // process events that have been completed, dropped, or no longer exist
-    const eventsToProcess = links.filter(link => {
+
+    const relevantEventIDs = links.map(link => {
       const [eventID, itemID, dateString = ''] = link
       const [event, , date] = [Task.byIdentifier(eventID), Task.byIdentifier(itemID), new Date(dateString)]
-      return event === null || event.taskStatus === Task.Status.Completed || event.taskStatus === Task.Status.Dropped || (event.repetitionRule !== null && agendasLibrary.lastInstance(event).completionDate > date)
-    }).map(link => link[0])
-    for (const event of eventsToProcess) {
-      await agendasLibrary.processEvent(event)
+      if (event === null || event.taskStatus === Task.Status.Completed || event.taskStatus === Task.Status.Dropped) return eventID
+      if (event.repetitionRule !== null) {
+        const lastInstance = agendasLibrary.lastInstance(event)
+        if (lastInstance.completionDate > date) return lastInstance.id.primaryKey
+      } 
+      return null // no criteria matched, event task still exists
+    }).filter(id => id !== null)
+
+    for (const eventID of relevantEventIDs) {
+      await agendasLibrary.processEvent(eventID)
       await agendasLibrary.cleanUp()
     }
   }
@@ -316,6 +331,7 @@
   agendasLibrary.processEvent = async (eventID) => {
     const event = Task.byIdentifier(eventID)
     const items = agendasLibrary.getItems(eventID)
+    const currentInstanceID = eventID.split('.')[0]
     if (items.length === 0) return
     const form = new Form()
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
@@ -342,7 +358,10 @@
         selected.forEach(item => item.drop(false))
         break
       case 'defer':
-        selected.forEach(item => agendasLibrary.addToAgenda(event, item))
+        selected.forEach(item => {
+          const newInstance = Task.byIdentifier(currentInstanceID)
+          agendasLibrary.addToAgenda(newInstance, item)
+        })
         break
     }
 
