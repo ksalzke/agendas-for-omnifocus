@@ -1,4 +1,4 @@
-/* global PlugIn Form */
+/* global PlugIn Form Alert */
 (() => {
   const action = new PlugIn.Action(async function (selection, sender) {
     const selected = selection.tasks[0]
@@ -17,7 +17,7 @@
     } else {
       const item = await chooseItem()
       URL.fromString('omnifocus:///task/' + item.id.primaryKey).call(() => {})
-    } 
+    }
   })
 
   action.validate = function (selection, sender) {
