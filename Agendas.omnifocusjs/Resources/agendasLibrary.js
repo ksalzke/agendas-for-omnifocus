@@ -360,10 +360,14 @@
       return
     }
     const form = new Form()
+    form.validate = (form) => {
+      const selected = items.filter(item => form.values[item.id.primaryKey])
+      if (form.values.action === 'rename') return selected.length === 1
+      else return selected.length > 0
+    }
+
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
-    const actions = ['complete', 'unlink', 're-link', 'drop']
-    if (event !== null && event.repetitionRule !== null) actions.push('defer')
-    form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
+    const actions = ['complete', 'unlink', 're-link', 'drop', 'rename']
     const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `'${event.name}': review agenda items`
     try { await form.show(prompt, 'Process Tasks') } catch (error) {
       console.log(error)
