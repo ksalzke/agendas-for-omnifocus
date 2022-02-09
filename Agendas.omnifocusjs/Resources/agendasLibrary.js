@@ -328,17 +328,30 @@
   }
 
   agendasLibrary.processEvent = async (eventID) => {
+    // only continue if not already running
+    const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+    console.log('processEventRunning', syncedPrefs.readBoolean('processEventRunning'))
+    if (syncedPrefs.readBoolean('processEventRunning')) return
+    syncedPrefs.write('processEventRunning', true)
+
     const event = Task.byIdentifier(eventID)
     const items = agendasLibrary.getItems(eventID)
     const currentInstanceID = eventID.split('.')[0]
-    if (items.length === 0) return
+    if (items.length === 0) {
+      syncedPrefs.write('processEventRunning', false)
+      return
+    }
     const form = new Form()
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
     const actions = ['complete', 'unlink', 're-link', 'drop']
     if (event !== null && event.repetitionRule !== null) actions.push('defer')
     form.addField(new Form.Field.Option('action', 'Action', actions, actions, 'complete'))
     const prompt = (event === null) ? 'Event (name unknown) no longer exists: review agenda items' : `'${event.name}': review agenda items`
-    await form.show(prompt, 'Process Tasks')
+    try { await form.show(prompt, 'Process Tasks') } catch (error) {
+      console.log(error)
+      syncedPrefs.write('processEventRunning', false)
+      return
+    }
     const selected = items.filter(item => form.values[item.id.primaryKey])
 
     // remove existing links
@@ -365,6 +378,7 @@
     }
 
     // run until there are remaining items
+    syncedPrefs.write('processEventRunning', false)
     if (selected.length !== items.length) await agendasLibrary.processEvent(eventID)
   }
 
