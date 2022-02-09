@@ -1,3 +1,12 @@
+## [1.3.1](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.3.0...v1.3.1) (2022-02-09)
+
+
+### Bug Fixes
+
+* :bug: fix issue with being unable to add multiple agenda items simultaneously ([efd7266](https://github.com/ksalzke/agendas-for-omnifocus/commit/efd726677659987955ef092e06e0b1b8e518aa6f))
+
+
+
 # [1.3.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.2.1...v1.3.0) (2022-02-09)
 
 
