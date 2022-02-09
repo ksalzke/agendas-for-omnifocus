@@ -3,10 +3,13 @@
   const agendasLibrary = new PlugIn.Library(new Version('1.0'))
 
   agendasLibrary.loadSyncedPrefs = () => {
+    console.log('Looking for syncedPrefs plugin...')
     const syncedPrefsPlugin = PlugIn.find('com.KaitlinSalzke.SyncedPrefLibrary')
+    console.log('syncedPrefs plugin:', syncedPrefsPlugin)
 
     if (syncedPrefsPlugin !== null) {
       const SyncedPref = syncedPrefsPlugin.library('syncedPrefLibrary').SyncedPref
+      console.log('returning syncedPrefs plugin...')
       return new SyncedPref('com.KaitlinSalzke.Agendas')
     } else {
       const alert = new Alert(
@@ -19,6 +22,7 @@
 
   agendasLibrary.getLinks = () => {
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+    console.log('links before returning getLinks:', syncedPrefs.read('links'))
     return syncedPrefs.read('links') || []
   }
 
@@ -76,6 +80,7 @@
   agendasLibrary.isItem = (task) => {
     const preferences = agendasLibrary.loadSyncedPrefs()
     const itemTagID = preferences.readString('itemTagID')
+    if (itemTagID === null) return false
     return task.tags.includes(Tag.byIdentifier(itemTagID))
   }
 
@@ -83,9 +88,7 @@
     console.log('running selectAndAddToAgenda')
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
-      console.log('Events:', events)
       const filteredEvents = events.filter(event => items.some(item => !agendasLibrary.getEvents(item).includes(event)))
-      console.log('Filtered events: ', filteredEvents)
 
       if (filteredEvents.length === 0) {
         const alert = new Alert('No events found', 'There are no relevant events available.')
@@ -162,15 +165,21 @@
     const event = await searchForm()
 
     // add all selected tasks as agenda items
-    items.forEach(async (item) => await agendasLibrary.addToAgenda(event, item))
+    for (item of items) {
+      await agendasLibrary.addToAgenda(event, item)
+    }
   }
 
   agendasLibrary.addToAgenda = async (event, item) => {
     console.log(`Trying to add ${item.name} (id: ${item.id.primaryKey}) to ${event.name} (id: ${event.id.primaryKey}) agenda`)
     const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+    console.log('Synced prefs: ', syncedPrefs)
     const links = agendasLibrary.getLinks()
+    console.log('Links: ', links)
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
+    console.log('Item tag: ', itemTag)
     const linkedEventTag = await agendasLibrary.getPrefTag('linkedEventTag')
+    console.log('Linked event tag: ', linkedEventTag)
 
     // check if is already linked to event - if it is, do not proceed
     if (links.some(link => link[0] === event.id.primaryKey && link[1] === item.id.primaryKey)) return
@@ -230,18 +239,27 @@
   }
 
   agendasLibrary.prefTag = prefTag => {
+    console.log('in prefTag')
     const preferences = agendasLibrary.loadSyncedPrefs()
     const tagID = preferences.readString(`${prefTag}ID`)
+    console.log('tagID is: ', tagID)
+    console.log('tag is ', Tag.byIdentifier(tagID))
+    console.log('if condition is ', tagID !== null && Tag.byIdentifier(tagID) !== null)
 
     if (tagID !== null && Tag.byIdentifier(tagID) !== null) return Tag.byIdentifier(tagID)
     return null
   }
 
   agendasLibrary.getPrefTag = async (prefTag) => {
+    console.log('in getPrefTag')
     const tag = agendasLibrary.prefTag(prefTag)
 
-    if (tag !== null) return tag
+    if (tag !== null) {
+      console.log('tag is ', tag,'. Returning tag.')
+      return tag
+    }
     // if not set, show preferences pane and then try again)
+    console.log('PrefTag is null. Prompting user.')
     await this.action('preferences').perform()
     return agendasLibrary.getPrefTag(prefTag)
   }
