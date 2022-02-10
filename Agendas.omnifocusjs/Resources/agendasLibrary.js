@@ -300,17 +300,17 @@
 
     // check tasks tagged with 'item' and if they are not included in links, remove tag
     const itemTag = await agendasLibrary.getPrefTag('itemTag')
-    for (const item of itemTag.tasks) {
+    for (const task of itemTag.tasks) {
       const events = await agendasLibrary.getEvents(task)
       if (events.length === 0) task.removeTag(itemTag)
-    })
+    }
 
     // check tasks tagged with 'linked event' and if they are not included in links, remove tag
     const linkedEventTag = await agendasLibrary.getPrefTag('linkedEventTag')
     for (const task of linkedEventTag.tasks) {
       const items = await agendasLibrary.getItems(task.id.primaryKey)
       if (items.length === 0) task.removeTag(linkedEventTag)
-    })
+    }
   }
 
   agendasLibrary.updateAgendas = async () => {
