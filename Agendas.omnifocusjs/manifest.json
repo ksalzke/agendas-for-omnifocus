@@ -7,15 +7,15 @@
   "actions": [
     {
       "identifier": "addToAgenda",
-      "image": "calendar"
+      "image": "calendar.badge.plus"
     },
     {
       "identifier": "removeFromAgenda",
-      "image": "delete.left.fill"
+      "image": "calendar.badge.minus"
     },
     {
       "identifier": "manageAgendaItems",
-      "image": "delete.right.fill"
+      "image": "calendar"
     },
     {
       "identifier": "goToEvent",
