@@ -1,3 +1,24 @@
+# [1.4.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.3.1...v1.4.0) (2022-02-13)
+
+
+### Bug Fixes
+
+* :bug: add in missing 'await's ([c3264fe](https://github.com/ksalzke/agendas-for-omnifocus/commit/c3264fe605c40178cde8355a13a66b1cf0f211a5))
+* :bug: fix bug re earlier async change ([e4391f1](https://github.com/ksalzke/agendas-for-omnifocus/commit/e4391f156b59c7801d2628063b36f3497ff333cc))
+* :bug: update checks of remaining events to use for ... of instead of forEach ([52a9672](https://github.com/ksalzke/agendas-for-omnifocus/commit/52a9672093364bde5c4b88857d69206e77e0434f))
+
+
+### Features
+
+* :lipstick: change SF symbols to be more relevant ([e02d6d6](https://github.com/ksalzke/agendas-for-omnifocus/commit/e02d6d69107710d7d5a9b09a4f24dfc13c3dc2b0))
+
+
+### Reverts
+
+* Revert "refactor: :recycle: convert getAllEvents to a synchronous function" ([9c53e71](https://github.com/ksalzke/agendas-for-omnifocus/commit/9c53e71e4b7c9af9e1548076627bb57e13006f5d))
+
+
+
 ## [1.3.1](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.3.0...v1.3.1) (2022-02-09)
 
 
