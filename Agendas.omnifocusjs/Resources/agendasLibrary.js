@@ -375,7 +375,9 @@
     const selected = items.filter(item => form.values[item.id.primaryKey])
 
     // remove existing links
-    if (form.values.action !== 'rename' && form.values.action !== 'go to') selected.forEach(item => agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey))
+    if (form.values.action !== 'rename' && form.values.action !== 'go to') {
+      for (const item of selected) await agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey)
+    }
 
     const rename = async (task) => {
       const form = new Form()
@@ -391,7 +393,7 @@
       case 'unlink':
         break
       case 're-link':
-        agendasLibrary.selectAndAddToAgenda(selected)
+        await agendasLibrary.selectAndAddToAgenda(selected)
         break
       case 'rename':
         await rename(selected[0])
@@ -405,10 +407,10 @@
         selected.forEach(item => item.drop(false))
         break
       case 'defer':
-        selected.forEach(item => {
+        for (const item of selected) {
           const newInstance = Task.byIdentifier(currentInstanceID)
-          agendasLibrary.addToAgenda(newInstance, item)
-        })
+          await agendasLibrary.addToAgenda(newInstance, item)
+        }
         break
     }
 
