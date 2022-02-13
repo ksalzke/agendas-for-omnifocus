@@ -414,7 +414,7 @@
         break
     }
 
-    // run until there are remaining items
+    // run until there are no remaining items
     syncedPrefs.write('processEventRunning', false)
     if (selected.length !== items.length) await agendasLibrary.processEvent(eventID)
   }
