@@ -1,3 +1,12 @@
+# [1.5.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.4.0...v1.5.0) (2022-02-15)
+
+
+### Features
+
+* :lipstick: show [LINKED] for already-linked events, rather than removing from the list completely ([91ba5ba](https://github.com/ksalzke/agendas-for-omnifocus/commit/91ba5badacbeecf66db00f3165e550c932bc12c9))
+
+
+
 # [1.4.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.3.1...v1.4.0) (2022-02-13)
 
 
