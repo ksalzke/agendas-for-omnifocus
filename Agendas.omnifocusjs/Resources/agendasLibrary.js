@@ -83,10 +83,9 @@
   agendasLibrary.selectAndAddToAgenda = async (items) => {
     const searchForm = async () => {
       const events = await agendasLibrary.getAllEvents()
-      const filteredEvents = events.filter(event => items.some(item => !agendasLibrary.getEvents(item).includes(event)))
 
-      if (filteredEvents.length === 0) {
-        const alert = new Alert('No events found', 'There are no relevant events available.')
+      if (events.length === 0) {
+        const alert = new Alert('No events found', 'There are no events available.')
         alert.show()
         return
       }
@@ -101,10 +100,14 @@
       form.addField(new Form.Field.String('textInput', 'Filter', null))
 
       // result box
-      const searchResults = filteredEvents
-      const searchResultIndexes = filteredEvents.map((e, i) => i)
+      const searchResults = events
+      const searchResultTitles = events.map(event => {
+        if (items.some(item => agendasLibrary.getEvents(item).includes(event))) return `${event.name} [LINKED]`
+        return event.name
+      })
+      const searchResultIndexes = events.map((e, i) => i)
       const lastUpdatedIndex = (searchResults.indexOf(lastUpdated) === -1) ? null : searchResults.indexOf(lastUpdated)
-      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResults.map(e => e.name), lastUpdatedIndex)
+      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResultTitles, lastUpdatedIndex)
       popupMenu.allowsNull = true
       popupMenu.nullOptionTitle = 'No Results'
       form.addField(popupMenu)
@@ -122,11 +125,12 @@
 
         if (form.fields.length === 1) {
           // search using provided string)
-          const searchResults = filteredEvents.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
+          const searchResults = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
           const resultIndexes = []
-          const resultTitles = searchResults.map((item, index) => {
+          const resultTitles = searchResults.map((event, index) => {
             resultIndexes.push(index)
-            return item.name
+            if (items.some(item => agendasLibrary.getEvents(item).includes(event))) return `${event.name} [LINKED]`
+            return event.name
           })
           // add new popup menu
           const popupMenu = new Form.Field.Option(
@@ -153,7 +157,7 @@
       // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
       const textValue = form.values.textInput || ''
       const menuItemIndex = form.values.menuItem
-      const results = filteredEvents.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
+      const results = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
       return results[menuItemIndex]
     }
 
