@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.5.0...v1.6.0) (2022-02-16)
+
+
+### Bug Fixes
+
+* :bug: allow 'remove from agenda' to be invoked on agenda items that are projects ([c6bf404](https://github.com/ksalzke/agendas-for-omnifocus/commit/c6bf404b1f1301a8568f00e5008f94b5d184ee6c))
+
+
+### Features
+
+* :sparkles: add supplementary action to reset 'processEventRunning' preference if needed ([4dd02f4](https://github.com/ksalzke/agendas-for-omnifocus/commit/4dd02f4f8edd1fe6cf28b7bcd218796e31d63361))
+
+
+
 # [1.5.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.4.0...v1.5.0) (2022-02-15)
 
 
