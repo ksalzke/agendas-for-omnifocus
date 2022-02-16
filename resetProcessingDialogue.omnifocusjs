@@ -1,0 +1,26 @@
+
+/* global PlugIn */
+/* eslint spaced-comment: ["error", "always", { "exceptions": ["{"] }] */
+/*{
+"type": "action",
+"targets": ["omnifocus"],
+"author": "Kaitlin Salzke",
+"identifier": "com.KaitlinSalzke.ResetAgendasProcessingDialogue",
+"description": "Resets the processing dialogue for the 'Agendas' plugin",
+"label": "Reset 'Agendas' Processing Dialogue",
+"version": "1.0.0",
+}*/
+(() => {
+    const action = new PlugIn.Action(async function (selection, sender) {
+      const agendasLibrary = PlugIn.find('com.KaitlinSalzke.Agendas').library('agendasLibrary')
+      const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+      syncedPrefs.write('processEventRunning', false)
+    })
+  
+    action.validate = function (selection, sender) {
+      return true
+    }
+  
+    return action
+  })()
+  
