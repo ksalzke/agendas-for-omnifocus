@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.6.0...v1.7.0) (2022-02-19)
+
+
+### Features
+
+* :lipstick: rename 'Preferences' to 'Preferences: Agendas' ([6acd63a](https://github.com/ksalzke/agendas-for-omnifocus/commit/6acd63a2153a1d5139c03ccb392d4be071d4205a))
+
+
+
 # [1.6.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.5.0...v1.6.0) (2022-02-16)
 
 
