@@ -14,7 +14,7 @@ PLEASE NOTE: The `processEvents` function (which is used by the 'Manage Agenda I
 
 ## Synced Preferences Plug-In
 
-**Important note: for this plug-in bundle to work correctly, my [Synced Preferences for OmniFocus plugin](https://github.com/ksalzke/synced-preferences-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
+**Important note: for this plug-in bundle to work correctly, my [Synced Preferences for OmniFocus plug-in](https://github.com/ksalzke/synced-preferences-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
 
 ## Installation
 
@@ -85,7 +85,7 @@ It runs the `updateAgendas` function, described in detail below.
 
 ## Preferences
 
-This action allows the user to set the preferences for the plug-in. These sync between devices using the Synced Preferences plugin linked above.
+This action allows the user to set the preferences for the plug-in. These sync between devices using the Synced Preferences plug-in linked above.
 
 The following preferences are available:
 
@@ -96,17 +96,17 @@ The following preferences are available:
 
 # Functions
 
-This plugin contains a number of functions within the `agendasLibrary` library.
+This plug-in contains a number of functions within the `agendasLibrary` library.
 
 ## `loadSyncedPrefs () : SyncedPref`
 
-Returns the [SyncedPref](https://github.com/ksalzke/synced-preferences-for-omnifocus) object for this plugin.
+Returns the [SyncedPref](https://github.com/ksalzke/synced-preferences-for-omnifocus) object for this plug-in.
 
-If the user does not have the plugin installed correctly, they are alerted.
+If the user does not have the plug-in installed correctly, they are alerted.
 
 ## `getLinks () : Array<[string, string, Date]>`
 
-Returns an array containing a list of agenda item/event pairs, as stored in the SyncedPref object for this plugin.
+Returns an array containing a list of agenda item/event pairs, as stored in the SyncedPref object for this plug-in.
 
 Each pair is stored as a three-element array: the first element is the ID of the event task, the second element is the ID of the dependent task, and the third is the date the link was created.
 
