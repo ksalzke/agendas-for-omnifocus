@@ -1,3 +1,19 @@
+# [1.8.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.7.0...v1.8.0) (2022-06-13)
+
+
+### Bug Fixes
+
+* :bug: remove async from 'reset processing dialogue' action ([a58080a](https://github.com/ksalzke/agendas-for-omnifocus/commit/a58080a9a07aa8d98266eb031ac2530a63dee34f))
+
+
+### Features
+
+* :sparkles: add 'edit note' processing option ([b26c2df](https://github.com/ksalzke/agendas-for-omnifocus/commit/b26c2df4d00b04508b65852ba0a2f004b784eadf))
+* :sparkles: add 'Set Last Updated' action ([e13ccde](https://github.com/ksalzke/agendas-for-omnifocus/commit/e13ccdef6a93db1f973583cf27b31bd0685d2f4d))
+* :sparkles: add KM macro to run 'resetProcessingDialogue' action ([c0d68a8](https://github.com/ksalzke/agendas-for-omnifocus/commit/c0d68a8113c1c40fc0fdc6be357b0f401a3544e6))
+
+
+
 # [1.7.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.6.0...v1.7.0) (2022-02-19)
 
 
