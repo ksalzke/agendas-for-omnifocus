@@ -363,8 +363,8 @@
     }
 
     items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
-    const actions = ['complete', 'unlink', 're-link', 'drop', 'rename', 'go to']
-    const actionNames = ['Complete agenda item(s)', 'Unlink agenda item(s)', 'Link agenda item(s) to a different event', 'Drop agenda item(s)', 'Rename agenda item (one only)', 'Show agenda item in project (one only)']
+    const actions = ['complete', 'unlink', 're-link', 'drop', 'rename', 'go to', 'edit note']
+    const actionNames = ['Complete agenda item(s)', 'Unlink agenda item(s)', 'Link agenda item(s) to a different event', 'Drop agenda item(s)', 'Rename agenda item (one only)', 'Show agenda item in project (one only)', 'Edit note(s)']
     if (event !== null && event.repetitionRule !== null) {
       actions.push('defer')
       actionNames.push('Defer agenda item(s)')
@@ -379,7 +379,7 @@
     const selected = items.filter(item => form.values[item.id.primaryKey])
 
     // remove existing links
-    if (form.values.action !== 'rename' && form.values.action !== 'go to') {
+    if (!['rename', 'go to', 'edit note'].includes(form.values.action)) {
       for (const item of selected) await agendasLibrary.removeFromAgenda(eventID, item.id.primaryKey)
     }
 
@@ -388,6 +388,13 @@
       form.addField(new Form.Field.String('name', 'New name', task.name))
       await form.show('Rename agenda item', 'Rename')
       task.name = form.values.name
+    }
+
+    const editNote = async (task) => {
+      const form = new Form()
+      form.addField(new Form.Field.String('note', '', task.note, null))
+      await form.show(`Edit note for '${task.name}'`, 'OK')
+      task.note = form.values.note
     }
 
     switch (form.values.action) {
@@ -401,6 +408,9 @@
         break
       case 'rename':
         await rename(selected[0])
+        break
+      case 'edit note':
+        for (const item of selected) await editNote(item)
         break
       case 'go to':
         await agendasLibrary.goTo(selected[0])

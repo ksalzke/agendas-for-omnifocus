@@ -221,5 +221,6 @@ The user may select one or more of these events and then select one of the follo
 * Defer agenda item(s) (for repeating events only - defers to the next instance of an event)
 * Rename agenda item (only one item may be selected)
 * Show agenda item in project (only one item may be selected)
+* Edit note(s)
 
 Except if the 'show in project' option is selected, the prompt will continue to appear until all agenda items have been processed.
