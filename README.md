@@ -83,6 +83,12 @@ This action can be run at anytime.
 
 It runs the `updateAgendas` function, described in detail below.
 
+## Set Last Updated
+
+This action can be run if an event task is selected.
+
+It marks the selecetd event task as the 'last updated', meaning that when 'Add to Agenda' action is run, this event will be the default selection.
+
 ## Preferences
 
 This action allows the user to set the preferences for the plug-in. These sync between devices using the Synced Preferences plug-in linked above.
