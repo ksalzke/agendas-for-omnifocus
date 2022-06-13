@@ -34,6 +34,10 @@
       "image": "arrow.2.circlepath.circle.fill"
     },
     {
+      "identifier": "setLastUpdated",
+      "image": "clock.arrow.circlepath"
+    },
+    {
       "identifier": "preferences",
       "image": "gearshape.2"
     }
