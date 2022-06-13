@@ -8,7 +8,7 @@ _Please note that all scripts on my GitHub account (or shared elsewhere) are wor
 
 Refer to ['issues'](https://github.com/ksalzke/agendas-for-omnifocus/issues) for known issues and planned changes/enhancements.
 
-PLEASE NOTE: The `processEvents` function (which is used by the 'Manage Agenda Items', 'Complete And Update Event', and 'Update Agendas' actions) can only be run while the 'processEventRunning' synced preference is set to false. If, for some reason, this preference gets stuck set to 'true', preventing the dialogue from being shown, this can be reset using the `resetProcessingDialogue.omnifocus` script.
+PLEASE NOTE: The `processEvents` function (which is used by the 'Manage Agenda Items', 'Complete And Update Event', and 'Update Agendas' actions) can only be run while the 'processEventRunning' synced preference is set to false. If, for some reason, this preference gets stuck set to 'true', preventing the dialogue from being shown, this can be reset using the `resetProcessingDialogue.omnifocus` script. A Keyboard Maestro macro is included which can be run every few hours, if desired.
 
 # Installation & Set-Up
 
