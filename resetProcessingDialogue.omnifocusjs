@@ -11,7 +11,7 @@
 "version": "1.0.0",
 }*/
 (() => {
-    const action = new PlugIn.Action(async function (selection, sender) {
+    const action = new PlugIn.Action(function (selection, sender) {
       const agendasLibrary = PlugIn.find('com.KaitlinSalzke.Agendas').library('agendasLibrary')
       const syncedPrefs = agendasLibrary.loadSyncedPrefs()
       syncedPrefs.write('processEventRunning', false)
