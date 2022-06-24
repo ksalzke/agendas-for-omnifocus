@@ -25,8 +25,12 @@
   agendasLibrary.goTo = async (task) => {
     // new tab - only Mac supported
     if (Device.current.mac) await document.newTabOnWindow(document.windows[0])
-    URL.fromString('omnifocus:///task/' + task.containingProject.id.primaryKey).open()
-    URL.fromString('omnifocus:///task/' + task.id.primaryKey).open()
+    if (task.containingProject !== null) {
+      URL.fromString('omnifocus:///task/' + task.containingProject.id.primaryKey).call(() => {})
+      URL.fromString('omnifocus:///task/' + task.id.primaryKey).call(() => {})
+    }
+    // possible bug in OmniFocus where /task/<id> is not working as expected - open inbox instead
+    else URL.fromString('omnifocus:///inbox/').open()
     return
   }
 
