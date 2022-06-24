@@ -25,8 +25,9 @@
   agendasLibrary.goTo = async (task) => {
     // new tab - only Mac supported
     if (Device.current.mac) await document.newTabOnWindow(document.windows[0])
-    URL.fromString('omnifocus:///task/' + task.containingProject.id.primaryKey).call(() => {})
-    URL.fromString('omnifocus:///task/' + task.id.primaryKey).call(() => {})
+    URL.fromString('omnifocus:///task/' + task.containingProject.id.primaryKey).open()
+    URL.fromString('omnifocus:///task/' + task.id.primaryKey).open()
+    return
   }
 
   agendasLibrary.addNotes = (event, item) => {
@@ -413,9 +414,9 @@
         for (const item of selected) await editNote(item)
         break
       case 'go to':
-        await agendasLibrary.goTo(selected[0])
         // stop processing tasks for now
         syncedPrefs.write('processEventRunning', false)
+        await agendasLibrary.goTo(selected[0])
         return
       case 'drop':
         selected.forEach(item => item.drop(false))
