@@ -10,6 +10,10 @@
       "image": "calendar.badge.plus"
     },
     {
+      "identifier": "addToAgendaViaProject",
+      "image": "calendar.badge.clock"
+    },
+    {
       "identifier": "removeFromAgenda",
       "image": "calendar.badge.minus"
     },
