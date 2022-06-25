@@ -143,9 +143,10 @@
     return form
   }
 
-  agendasLibrary.selectAndAddToAgenda = async (items) => {
+  agendasLibrary.selectAndAddToAgenda = async (items, project) => {
 
-    const events = await agendasLibrary.getAllEvents()
+    const allEvents = await agendasLibrary.getAllEvents()
+    const events = (project === null) ? allEvents : allEvents.filter(event => event.containingProject === project)
     const eventTitles = events.map(event => {
       const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
       const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
@@ -164,7 +165,7 @@
     const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
 
     const searchForm = await agendasLibrary.searchForm(events, eventTitles, lastUpdated, null)
-    const form  = searchForm.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
+    const form  = await searchForm.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
 
     // processing
     const textValue = form.values.textInput || ''
@@ -173,9 +174,27 @@
     const event = results[menuItemIndex]
 
     // add all selected tasks as agenda items
-    for (const item of items) {
-      await agendasLibrary.addToAgenda(event, item)
-    }
+    for (const item of items) await agendasLibrary.addToAgenda(event, item)
+  }
+
+  agendasLibrary.projectPrompt = async () => {
+    const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+    const lastSelectedProject = (syncedPrefs.read('lastSelectedProjectID') === null) ? null : Project.byIdentifier(syncedPrefs.read('lastSelectedProjectID'))
+
+    // show form
+    const activeProjects = flattenedProjects.filter(project => [Project.Status.Active, Project.Status.OnHold].includes(project.status))
+    const projectForm = await agendasLibrary.searchForm(activeProjects, activeProjects.map(p => p.name), lastSelectedProject, projectsMatching)
+    const form = await projectForm.show('Select a project', 'Continue')
+
+    // processing
+    const textValue = form.values.textInput || ''
+    const menuItemIndex = form.values.menuItem
+    const results = (textValue !== '') ? projectsMatching(textValue) : activeProjects
+    const project = results[menuItemIndex]
+
+    // save project for next time
+    syncedPrefs.write('lastSelectedProjectID', project.id.primaryKey)
+    return project
   }
 
   agendasLibrary.addToAgenda = async (event, item) => {
