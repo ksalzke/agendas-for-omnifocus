@@ -107,8 +107,10 @@
       // result box
       const searchResults = events
       const searchResultTitles = events.map(event => {
-        if (items.some(item => agendasLibrary.getEvents(item).includes(event))) return `${event.name} [LINKED]`
-        return event.name
+        const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
+        const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
+        const linked = (items.some(item => agendasLibrary.getEvents(item).includes(event))) ? ' [LINKED]' : ''
+        return tagList + event.name + linked
       })
       const searchResultIndexes = events.map((e, i) => i)
       const lastUpdatedIndex = (searchResults.indexOf(lastUpdated) === -1) ? null : searchResults.indexOf(lastUpdated)
@@ -134,8 +136,10 @@
           const resultIndexes = []
           const resultTitles = searchResults.map((event, index) => {
             resultIndexes.push(index)
-            if (items.some(item => agendasLibrary.getEvents(item).includes(event))) return `${event.name} [LINKED]`
-            return event.name
+            const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
+            const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
+            const linked = (items.some(item => agendasLibrary.getEvents(item).includes(event))) ? ' [LINKED]' : ''
+            return tagList + event.name + linked
           })
           // add new popup menu
           const popupMenu = new Form.Field.Option(
