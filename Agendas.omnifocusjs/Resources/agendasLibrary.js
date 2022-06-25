@@ -263,6 +263,13 @@
     return eventTagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
   }
 
+  agendasLibrary.tagLabelsToShow = () => {
+    const preferences = agendasLibrary.loadSyncedPrefs()
+    const tagIDs = preferences.read('tagLabelsToShowIDs') || []
+
+    return tagIDs.map(id => Tag.byIdentifier(id)).filter(tag => tag !== null)
+  }
+
   agendasLibrary.getEventTags = async () => {
     const eventTags = agendasLibrary.eventTags()
 
@@ -373,8 +380,10 @@
     }
 
     items.forEach(item => {
+      const tagNames = item.tags.filter(tag => agendasLibrary.tagLabelsToShow().includes(tag)).map(tag => tag.name)
+      const tagList = (tagNames.length > 0) ? `[ ${tagNames.join(' | ')}] ` : ''
       const statusLabel = (item.taskStatus === Task.Status.Blocked) ? ' [INACTIVE]' : ''
-      form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name + statusLabel, false))
+      form.addField(new Form.Field.Checkbox(item.id.primaryKey, tagList + item.name + statusLabel, false))
     })
     const actions = ['complete', 'unlink', 're-link', 'drop', 'rename', 'go to', 'edit note']
     const actionNames = ['Complete agenda item(s)', 'Unlink agenda item(s)', 'Link agenda item(s) to a different event', 'Drop agenda item(s)', 'Rename agenda item (one only)', 'Show agenda item in project (one only)', 'Edit note(s)']
