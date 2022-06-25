@@ -18,7 +18,7 @@ PLEASE NOTE: The `processEvents` function (which is used by the 'Manage Agenda I
 
 ## Installation
 
-1. Download the [latest release](https://github.com/ksalzke/dependency-omnifocus-plugin/releases/latest).
+1. Download the [latest release](https://github.com/ksalzke/agendas-for-omnifocus/releases/latest).
 2. Unzip the downloaded file.
 3. Move the `.omnifocusjs` file to your OmniFocus plug-in library folder (or open it to install).
 4. Configure your preferences using the `Preferences` action.
