@@ -45,6 +45,12 @@ This action can be run when one or more tasks or projects are selected.
 
 It prompts the user to select an event, and adds the item(s) to that event's agenda.
 
+## Add to Agenda Via Project
+
+This action can be run when one or more tasks or projects are selected.
+
+It prompts the user to first select a project, then select an event contained within that project, and adds the item(s) to that event's agenda.
+
 ## Remove From Agenda
 
 This action can be run when one or more tasks tagged with the 'agenda tag' (set in Preferences) are selected.
@@ -99,6 +105,7 @@ The following preferences are available:
 * **Linked Event Tag**. This tag is used to denote an event that has associated agenda items.
 * **Add link to related tasks to notes**. If this is selected, a link to the agenda item is added to the note of the event task, and vice versa. (Note that changing this setting will add or remove notes from all tasks.)
 * **Event Tag(s)** Tasks tagged with any of these tags are considered 'events' and will be available to select when adding an agenda item. More than one tag may be selected.
+* **Tag(s) To Show When Processing Items'** If selected, these tags are shown as prefixes to task names in the 'Manage Agenda Items' dialogue box, for user reference.
 
 # Functions
 
@@ -148,7 +155,17 @@ Checks whether a task is an 'event' i.e. whether it has been tagged with a tag t
 
 Checks whether a task is an agenda item i.e. whether it has the 'agenda item' tag.
 
-## `selectAndAddToAgenda (items: Array<Task>)` (asynchronous)
+## `searchForm (allItems: Array<T>, itemTitles: Array<String>, firstSelected: T, matchingFunction: function | null) : Form` (asynchronous)
+
+Returns a form that has two fields.
+
+The first field is an empty text box, which the user can type into to search the second field, which is a dropdown menu comprising `allItems` with titles `itemTitles`. The initial selected item will be `firstSelected`.
+
+The `matchingFunction` should be an OmniFocus matching function such as `tagsMatching` or `projectsMatching`. If this parameter is passed, fuzzy search will be used (but note that the corresponding allItems parameter should be `flattenedProjects` or `flattenedTags`, for example; a subset cannot be used).
+
+If the `matchingFunction` is null, the search will be exact.
+
+## `selectAndAddToAgenda (items: Array<Task>, project: Project | null)` (asynchronous)
 
 Prompts the user to select an event from the list of tasks that have been tagged with 'event'. If all tasks have been added to a particular event, it is still shown in the dialogue but is denoted with '[LINKED]'.
 
@@ -173,6 +190,10 @@ Returns the currently-set tag ('itemTag' or 'linkedEventTag'), if set in prefere
 ## `eventTags () : Array<Tag>`
 
 Returns an array of 'event tags' i.e. tags that denote that a task is an event that can be linked. These can be set in preferences. If there are no event tags set, returns an empty array.
+
+## `tagLabelsToShow () : Array<Tag>`
+
+Returns the array of 'tag labels' to be shown with the task names as part of the 'Manage Agenda Items' dialogue. This is set in Preferences.
 
 ## `getEventTags () : Tag` (asynchronous)
 
