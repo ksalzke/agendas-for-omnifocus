@@ -5,7 +5,6 @@
     const items = Array.from(selection.tasks).concat(Array.from(selection.projects).map(i => i.task))
 
     const proj = await this.agendasLibrary.projectPrompt()
-    console.log(proj)
 
     await this.agendasLibrary.selectAndAddToAgenda(items, proj)
   })
