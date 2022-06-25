@@ -354,7 +354,8 @@
     syncedPrefs.write('processEventRunning', true)
 
     const event = Task.byIdentifier(eventID)
-    const items = agendasLibrary.getItems(eventID)
+    const items = agendasLibrary.getItems(eventID).sort((a, b) => (a.taskStatus < b.taskStatus) ? -1 : 1)
+
     const currentInstanceID = eventID.split('.')[0]
     if (items.length === 0) {
       syncedPrefs.write('processEventRunning', false)
@@ -367,7 +368,10 @@
       else return selected.length > 0
     }
 
-    items.forEach(item => form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name, false)))
+    items.forEach(item => {
+      const statusLabel = (item.taskStatus === Task.Status.Blocked) ? ' [INACTIVE]' : ''
+      form.addField(new Form.Field.Checkbox(item.id.primaryKey, item.name + statusLabel, false))
+    })
     const actions = ['complete', 'unlink', 're-link', 'drop', 'rename', 'go to', 'edit note']
     const actionNames = ['Complete agenda item(s)', 'Unlink agenda item(s)', 'Link agenda item(s) to a different event', 'Drop agenda item(s)', 'Rename agenda item (one only)', 'Show agenda item in project (one only)', 'Edit note(s)']
     if (event !== null && event.repetitionRule !== null) {
