@@ -85,92 +85,92 @@
     return task.tags.includes(Tag.byIdentifier(itemTagID))
   }
 
-  agendasLibrary.selectAndAddToAgenda = async (items) => {
-    const searchForm = async () => {
-      const events = await agendasLibrary.getAllEvents()
+  agendasLibrary.searchForm = async (allItems, itemTitles, firstSelected, matchingFunction) => {
+    const form = new Form()
 
-      if (events.length === 0) {
-        const alert = new Alert('No events found', 'There are no events available.')
-        alert.show()
-        return
-      }
+    // search box
+    form.addField(new Form.Field.String('textInput', 'Search', null))
 
-      const syncedPrefs = agendasLibrary.loadSyncedPrefs()
-      const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
-      const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
+    // result box
+    const searchResults = allItems
+    const searchResultTitles = itemTitles
+    const searchResultIndexes = allItems.map((item, index) => index)
+    const firstSelectedIndex = (searchResults.indexOf(firstSelected) === -1) ? null : searchResults.indexOf(firstSelected)
+    const popupMenu = new Form.Field.Option('menuItem', 'Results', searchResultIndexes, searchResultTitles, firstSelectedIndex)
+    popupMenu.allowsNull = true
+    popupMenu.nullOptionTitle = 'No Results'
+    form.addField(popupMenu)
 
-      const form = new Form()
+    let currentValue = ''
 
-      // search box
-      form.addField(new Form.Field.String('textInput', 'Filter', null))
-
-      // result box
-      const searchResults = events
-      const searchResultTitles = events.map(event => {
-        const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
-        const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
-        const linked = (items.some(item => agendasLibrary.getEvents(item).includes(event))) ? ' [LINKED]' : ''
-        return tagList + event.name + linked
-      })
-      const searchResultIndexes = events.map((e, i) => i)
-      const lastUpdatedIndex = (searchResults.indexOf(lastUpdated) === -1) ? null : searchResults.indexOf(lastUpdated)
-      const popupMenu = new Form.Field.Option('menuItem', 'Event', searchResultIndexes, searchResultTitles, lastUpdatedIndex)
-      popupMenu.allowsNull = true
-      popupMenu.nullOptionTitle = 'No Results'
-      form.addField(popupMenu)
-
-      // validation
-      form.validate = function (formObject) {
-        const textValue = formObject.values.textInput || ''
-        if (textValue !== currentValue) {
-          currentValue = textValue
-          // remove popup menu
-          if (form.fields.length === 2) {
-            form.removeField(form.fields[1])
-          }
-        }
-
-        if (form.fields.length === 1) {
-          // search using provided string)
-          const searchResults = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
-          const resultIndexes = []
-          const resultTitles = searchResults.map((event, index) => {
-            resultIndexes.push(index)
-            const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
-            const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
-            const linked = (items.some(item => agendasLibrary.getEvents(item).includes(event))) ? ' [LINKED]' : ''
-            return tagList + event.name + linked
-          })
-          // add new popup menu
-          const popupMenu = new Form.Field.Option(
-            'menuItem',
-            'Event',
-            resultIndexes,
-            resultTitles,
-            resultIndexes[0]
-          )
-          form.addField(popupMenu)
-          return false
-        }
-        if (form.fields.length === 2) {
-          const menuValue = formObject.values.menuItem
-          if (menuValue === undefined || String(menuValue) === 'null') { return false }
-          return true
+    // validation
+    form.validate = function (formObject) {
+      const textValue = formObject.values.textInput || ''
+      if (textValue !== currentValue) {
+        currentValue = textValue
+        // remove popup menu
+        if (form.fields.some(field => field.key === 'menuItem')) {
+          form.removeField(form.fields.find(field => field.key === 'menuItem'))
         }
       }
 
-      // show form
-      let currentValue = ''
-      await form.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
-
-      // PROCESSING USING THE DATA EXTRACTED FROM THE FORM
-      const textValue = form.values.textInput || ''
-      const menuItemIndex = form.values.menuItem
-      const results = events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase()))
-      return results[menuItemIndex]
+      if (!form.fields.some(field => field.key === 'menuItem')) {
+        // search using provided string
+        const searchResults = (matchingFunction === null) ? allItems.filter((item, index) => itemTitles[index].toLowerCase().includes(textValue.toLowerCase())) : (textValue !== '') ? matchingFunction(textValue) : allItems
+        const resultIndexes = []
+        const resultTitles = searchResults.map((item, index) => {
+          resultIndexes.push(index)
+          return itemTitles[allItems.indexOf(item)]
+        })
+        // add new popup menu
+        const popupMenu = new Form.Field.Option(
+          'menuItem',
+          'Results',
+          resultIndexes,
+          resultTitles,
+          resultIndexes[0]
+        )
+        form.addField(popupMenu, 1)
+        return false
+      }
+      else {
+        const menuValue = formObject.values.menuItem
+        if (menuValue === undefined || String(menuValue) === 'null') { return false }
+        return true
+      }
     }
 
-    const event = await searchForm()
+    return form
+  }
+
+  agendasLibrary.selectAndAddToAgenda = async (items) => {
+
+    const events = await agendasLibrary.getAllEvents()
+    const eventTitles = events.map(event => {
+      const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
+      const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
+      const linked = (items.some(item => agendasLibrary.getEvents(item).includes(event))) ? ' [LINKED]' : ''
+      return tagList + event.name + linked
+    })
+
+    if (events.length === 0) {
+      const alert = new Alert('No events found', 'There are no events available.')
+      alert.show()
+      return
+    }
+
+    const syncedPrefs = agendasLibrary.loadSyncedPrefs()
+    const lastUpdatedID = syncedPrefs.readString('lastUpdatedID')
+    const lastUpdated = (lastUpdatedID !== null && Task.byIdentifier(lastUpdatedID) !== null) ? Task.byIdentifier(lastUpdatedID) : null
+
+    const searchForm = await agendasLibrary.searchForm(events, eventTitles, lastUpdated, null)
+    const form  = searchForm.show('Choose Event', `Add Agenda Item${(items.length > 1) ? 's' : ''}`)
+
+    // processing
+    const textValue = form.values.textInput || ''
+    const menuItemIndex = form.values.menuItem
+    const results = (textValue !== '') ? events.filter(event => event.name.toLowerCase().includes(textValue.toLowerCase())) : events
+    const event = results[menuItemIndex]
 
     // add all selected tasks as agenda items
     for (const item of items) {
