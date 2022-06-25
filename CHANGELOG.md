@@ -1,3 +1,21 @@
+# [1.9.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.8.0...v1.9.0) (2022-06-25)
+
+
+### Bug Fixes
+
+* :bug: fix 'show agenda item' processing dialogue bug ([e32316a](https://github.com/ksalzke/agendas-for-omnifocus/commit/e32316a2e9c604a2a02e2fc85b8cf1c8ea12eeba))
+* :bug: open inbox when 'goTo' task is in the inbox instead of silently failing ([6f2f6b9](https://github.com/ksalzke/agendas-for-omnifocus/commit/6f2f6b9e6c3bdfda9e8d909db8e42a8045e3e35f))
+
+
+### Features
+
+* :lipstick: add option to show certain tags in processing dialogue ([85ec2e4](https://github.com/ksalzke/agendas-for-omnifocus/commit/85ec2e4d7b43b51ba81d323ba127a705f33b63a5))
+* :lipstick: label inactive agenda items as [INACTIVE] and move to bottom of list ([9d3b238](https://github.com/ksalzke/agendas-for-omnifocus/commit/9d3b23891d12823347dc85e3da804634daebf379))
+* :lipstick: show event tags if more than one set in preferences ([25db5b7](https://github.com/ksalzke/agendas-for-omnifocus/commit/25db5b7fcc591ec75bb5c46af8c687096fde5813))
+* :sparkles: add 'Add To Agenda Via Project' action ([97a8f06](https://github.com/ksalzke/agendas-for-omnifocus/commit/97a8f068fd84e4589e3f475e5f764f216e2f018e))
+
+
+
 # [1.8.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.7.0...v1.8.0) (2022-06-13)
 
 
