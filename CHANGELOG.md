@@ -1,3 +1,12 @@
+## [1.9.1](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.9.0...v1.9.1) (2023-02-13)
+
+
+### Bug Fixes
+
+* :bug: fix bug where agenda items could not be re-linked from dialogue ([74ce79e](https://github.com/ksalzke/agendas-for-omnifocus/commit/74ce79e93406f661633b6348d603d52fc0dd4562))
+
+
+
 # [1.9.0](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.8.0...v1.9.0) (2022-06-25)
 
 
