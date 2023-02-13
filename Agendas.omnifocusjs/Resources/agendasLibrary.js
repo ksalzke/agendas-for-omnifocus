@@ -144,9 +144,8 @@
   }
 
   agendasLibrary.selectAndAddToAgenda = async (items, project) => {
-
     const allEvents = await agendasLibrary.getAllEvents()
-    const events = (project === null) ? allEvents : allEvents.filter(event => event.containingProject === project)
+    const events = (project === null || project === undefined) ? allEvents : allEvents.filter(event => event.containingProject === project)
     const eventTitles = events.map(event => {
       const tagNames = event.tags.filter(tag => agendasLibrary.eventTags().includes(tag)).map(tag => tag.name)
       const tagList = (agendasLibrary.eventTags().length > 1) ? `[ ${tagNames.join(' | ')}] ` : ''
