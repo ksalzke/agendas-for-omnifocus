@@ -3,7 +3,7 @@
   "identifier": "com.KaitlinSalzke.Agendas",
   "author": "Kaitlin Salzke",
   "description": "An OmniFocus plugin that for the management of 'event' and 'agenda' tasks.",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "actions": [
     {
       "identifier": "addToAgenda",

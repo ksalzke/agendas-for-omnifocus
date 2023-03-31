@@ -1,3 +1,12 @@
+## [1.9.2](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.9.1...v1.9.2) (2023-03-31)
+
+
+### Bug Fixes
+
+* :bug: allow 'manage agenda items' to be run on events that are projects ([b73e306](https://github.com/ksalzke/agendas-for-omnifocus/commit/b73e3063f5e8d8a61d180c90db15106576424a05))
+
+
+
 ## [1.9.1](https://github.com/ksalzke/agendas-for-omnifocus/compare/v1.9.0...v1.9.1) (2023-02-13)
 
 
