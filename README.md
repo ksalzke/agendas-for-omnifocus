@@ -12,18 +12,19 @@ PLEASE NOTE: The `processEvents` function (which is used by the 'Manage Agenda I
 
 # Installation & Set-Up
 
-## Synced Preferences Plug-In
+## Prerequisites 
 
-**Important note: for this plug-in bundle to work correctly, my [Synced Preferences for OmniFocus plug-in](https://github.com/ksalzke/synced-preferences-for-omnifocus) is also required and needs to be added to the plug-in folder separately.**
+This plug-in requires [Synced Preferences for OmniFocus](https://github.com/ksalzke/synced-preferences-for-omnifocus). Install it separately before using this plug-in.
 
 ## Installation
 
-1. Download the [latest release](https://github.com/ksalzke/agendas-for-omnifocus/releases/latest).
-2. Unzip the downloaded file.
-3. Move the `.omnifocusjs` file to your OmniFocus plug-in library folder (or open it to install).
-4. Configure your preferences using the `Preferences` action.
+[![Install in OmniFocus](https://img.shields.io/badge/OmniFocus-Install-5E5CE6?style=flat-square)](https://ksalzke.github.io/omnifocus-plugin-installer/?repo=agendas-for-omnifocus)
 
-## Set-Up
+Select **Install** above, then follow the prompts.
+
+## Setup
+
+After installation, run the **Preferences** action to configure the plug-in.
 
 This plug-in makes use of three (or more) tags:
 
@@ -33,7 +34,7 @@ This plug-in makes use of three (or more) tags:
 | Linked Event | `🗓️`                      | Denotes an event task that has associated agenda items.                                                             |
 | Event        | `Event` or `Appointment` | Denotes a task that represents an event which may have agenda items linked to it. Multiple 'event' tags can be set. |
 
-These tags should be created manually and can then be set in Preferences.
+These tags should be created manually and can then be set in Preferences. The **Preferences** action is available only when no tasks are selected.
 
 # Actions
 
